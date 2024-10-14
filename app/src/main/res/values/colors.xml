@@ -7,4 +7,12 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    //Custom Colors
+    <color name="oceanGreen">#58B199</color>
+    <color name="swampyGreen">#71AE57</color>
+    <color name="oceanBlue">#57AEAB</color>
+    <color name="limeGreen">#4DE62D</color>
+    <color name="babyGreen">#F4FEF7</color>
+    <color name="shrekGreen">#4BB20B</color>
 </resources>
