@@ -12,26 +12,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.mobdeve.s12.group10.mco.ui.theme.Group10MCOTheme
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.mobdeve.s12.group10.mco.databinding.ActivityMainBinding
 
 class MainActivity : ComponentActivity() {
+    private lateinit var viewBinding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    Group10MCOTheme {
-        Greeting("Android")
+        viewBinding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(viewBinding.root)
     }
 }
