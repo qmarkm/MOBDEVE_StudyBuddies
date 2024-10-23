@@ -1,5 +1,7 @@
 package com.mobdeve.s12.group10.mco
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -23,5 +25,11 @@ class MainActivity : ComponentActivity() {
 
         viewBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
+
+        viewBinding.btnStudyPact.setOnClickListener {
+            val intent = Intent(this, MainStudyPacts::class.java)
+            this.startActivity(intent)
+            finish()
+        }
     }
 }
