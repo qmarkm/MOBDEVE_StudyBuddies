@@ -29,7 +29,6 @@ class MainActivity : ComponentActivity() {
         viewBinding.btnStudyPact.setOnClickListener {
             val intent = Intent(this, MainStudyPacts::class.java)
             this.startActivity(intent)
-            finish()
         }
     }
 }

@@ -26,12 +26,12 @@
         android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:background="#FFFFFF"
+        android:background="@color/babyGreen"
         android:orientation="vertical"
         android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHeight_percent="0.20"
+        app:layout_constraintHeight_percent="0.19"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -59,7 +59,8 @@
                 android:text="Join/Leave Study Pact"
                 android:background="@drawable/button_gradient1"
                 android:padding="5dp"
-                android:layout_margin="5dp"/>
+                android:layout_margin="5dp"
+                android:textColor="@color/babyGreen"/>
 
             <Button
                 android:id="@+id/btnSelfSP"
@@ -69,7 +70,8 @@
                 android:text="Create/Update Study Pact"
                 android:background="@drawable/button_gradient1"
                 android:padding="5dp"
-                android:layout_margin="5dp"/>
+                android:layout_margin="5dp"
+                android:textColor="@color/babyGreen"/>
 
         </LinearLayout>
 
