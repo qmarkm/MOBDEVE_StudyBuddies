@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/babyGreen"
-    tools:context=".SPView">
+    tools:context=".SPSelf">
 
     <ImageButton
         android:id="@+id/btnReturn"
@@ -42,8 +42,9 @@
         android:id="@+id/txvTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
-        android:text="View Study Pacts"
+        android:layout_marginTop="20dp"
+        android:text="Make your own\nStudy Pact"
+        android:textAlignment="center"
         android:textColor="#000000"
         android:textSize="24sp"
         android:textStyle="bold"
@@ -59,7 +60,7 @@
         android:layout_width="0dp"
         android:layout_height="47dp"
         android:layout_marginStart="25dp"
-        android:layout_marginEnd="25dp"
+        android:layout_marginEnd="10dp"
         android:background="@drawable/button_gradient1"
         android:drawableStart="@drawable/search"
         android:ems="10"
@@ -67,9 +68,23 @@
         android:inputType="text"
         android:paddingLeft="10sp"
         android:textColor="@color/babyGreen"
+        android:textColorHint="@color/babyGreen"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnAddSP"
+        app:layout_constraintHorizontal_bias="0.409"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.138" />
+
+    <ImageButton
+        android:id="@+id/btnAddSP"
+        android:layout_width="47dp"
+        android:layout_height="47dp"
+        android:background="@drawable/button_gradient1"
+        android:src="@drawable/add"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.409"
+        app:layout_constraintHorizontal_bias="0.931"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.138" />

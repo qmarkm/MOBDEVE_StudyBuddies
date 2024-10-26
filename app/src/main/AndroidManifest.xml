@@ -13,9 +13,24 @@
         android:theme="@style/Theme.Group10MCO"
         tools:targetApi="31">
         <activity
-            android:name=".SPView"
+            android:name=".SPDetailed"
             android:exported="false"
             android:theme="@style/Theme.AppCompat"/>
+        <activity
+            android:name=".SPCreate"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".SPSelf"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".SPView"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat"
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".MainStudyPacts"
             android:exported="false"

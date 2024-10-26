@@ -1,5 +1,6 @@
 package com.mobdeve.s12.group10.mco
 
+import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -17,5 +18,14 @@ class SPAdapter(private val studyPacts: ArrayList<StudyPact>): RecyclerView.Adap
 
     override fun onBindViewHolder(holder: SPViewHolder, position: Int) {
         holder.bindData(studyPacts.get(position))
+
+        holder.itemView.setOnClickListener{
+            val intent = Intent(holder.itemView.context, SPDetailed::class.java)
+
+            //TODO: Pass data here when StudyPacts class is complete
+            intent.putExtra("SP_TITLE", studyPacts.get(position).name)
+
+            holder.itemView.context.startActivity(intent)
+        }
     }
 }
