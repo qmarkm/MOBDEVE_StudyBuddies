@@ -22,8 +22,12 @@ class SPAdapter(private val studyPacts: ArrayList<StudyPact>): RecyclerView.Adap
         holder.itemView.setOnClickListener{
             val intent = Intent(holder.itemView.context, SPDetailed::class.java)
 
-            //TODO: Pass data here when StudyPacts class is complete
+            //TODO: Pass appropriate data here when StudyPacts class is complete
             intent.putExtra("SP_TITLE", studyPacts.get(position).name)
+            intent.putExtra("SP_DATETIME", studyPacts.get(position).dateTime)
+            intent.putExtra("SP_LOCATION", studyPacts.get(position).location)
+            intent.putExtra("SP_DESCRIPTION", studyPacts.get(position).description)
+            intent.putExtra("SP_USERS", studyPacts.get(position).joiningUsers)              //ArrayList?
 
             holder.itemView.context.startActivity(intent)
         }
