@@ -2,4 +2,9 @@
 <resources>
 
     <style name="Theme.Group10MCO" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="DialogStyle" parent="Theme.AppCompat.Dialog">
+        <item name="android:windowMinWidthMajor">90%</item>
+        <item name="android:windowMinWidthMinor">90%</item>
+    </style>
 </resources>
