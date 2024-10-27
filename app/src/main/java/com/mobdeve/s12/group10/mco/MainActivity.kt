@@ -3,6 +3,7 @@ package com.mobdeve.s12.group10.mco
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -29,6 +30,20 @@ class MainActivity : ComponentActivity() {
         viewBinding.btnStudyPact.setOnClickListener {
             val intent = Intent(this, MainStudyPacts::class.java)
             this.startActivity(intent)
+        }
+
+        viewBinding.rcvSP.adapter = SPAdapter(DataGenerator.loadData())
+        viewBinding.rcvSP.layoutManager = LinearLayoutManager(this)
+        viewBinding.rcvSP.visibility = View.GONE
+
+        viewBinding.btnToggleSP.setOnClickListener {
+            viewBinding.rcvSP.visibility = View.VISIBLE
+            //TODO: Make the RecyclerView of Calendar Tasks hide here
+        }
+
+        viewBinding.btnToggleTask.setOnClickListener {
+            //TODO: Make the RecyclerView of Calendar Tasks show here
+            viewBinding.rcvSP.visibility = View.GONE
         }
     }
 }
