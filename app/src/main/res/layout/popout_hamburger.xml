@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/popup_background"
+    android:padding="16dp"
+    android:gravity="center_vertical"
+    android:layout_gravity="end">
+
+<Button
+        android:id="@+id/btnHomePopup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:background="@android:color/transparent"
+        android:drawableLeft="@drawable/house_md"
+        android:padding="8dp"
+        android:text="Home"
+        android:textAlignment="textEnd"
+        android:textColor="@color/swampyGreen" />
+
+    <Button
+        android:id="@+id/btnCalendarPopup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:background="@android:color/transparent"
+        android:drawableLeft="@drawable/calendar"
+        android:padding="8dp"
+        android:text="Calendar"
+        android:textAlignment="textEnd"
+        android:textColor="@color/swampyGreen" />
+
+    <Button
+        android:id="@+id/btnStudyPactPopup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:background="@android:color/transparent"
+        android:drawableLeft="@drawable/study_pact_icon"
+        android:padding="8dp"
+        android:text="Study Pact"
+        android:textAlignment="textEnd"
+        android:textColor="@color/swampyGreen" />
+
+
+    <Button
+        android:id="@+id/btnAccountPopup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:background="@android:color/transparent"
+        android:padding="8dp"
+        android:text="Account"
+        android:textAlignment="textEnd"
+        android:textColor="@color/swampyGreen" />
+
+    <Button
+        android:id="@+id/btnLogoutPopup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:background="@android:color/transparent"
+        android:padding="8dp"
+        android:text="Logout"
+        android:textAlignment="textEnd"
+        android:textColor="@color/swampyGreen" />
+
+</LinearLayout>
