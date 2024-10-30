@@ -28,12 +28,12 @@ class MainActivity : ComponentActivity() {
         setContentView(viewBinding.root)
 
         viewBinding.btnStudyPact.setOnClickListener {
-            val intent = Intent(this, AccountSettings::class.java)
+            val intent = Intent(this, MainStudyPacts::class.java)
             this.startActivity(intent)
         }
 
         viewBinding.btnAccount.setOnClickListener {
-            val intent = Intent(this, AccountSettings:class.java)
+            val intent = Intent(this, AccountSettings::class.java)
             this.startActivity(intent)
         }
 
