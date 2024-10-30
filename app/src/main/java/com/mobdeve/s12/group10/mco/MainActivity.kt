@@ -32,17 +32,26 @@ class MainActivity : ComponentActivity() {
             this.startActivity(intent)
         }
 
+        viewBinding.btnAccount.setOnClickListener {
+            val intent = Intent(this, AccountSettings:class.java)
+            this.startActivity(intent)
+        }
+
+        viewBinding.btnCalendar.setOnClickListener {
+            //TODO: Switch activity to Calendar Activity
+        }
+
         viewBinding.rcvSP.adapter = SPAdapter(DataGenerator.loadData())
         viewBinding.rcvSP.layoutManager = LinearLayoutManager(this)
         viewBinding.rcvSP.visibility = View.GONE
 
         viewBinding.btnToggleSP.setOnClickListener {
             viewBinding.rcvSP.visibility = View.VISIBLE
-            //TODO: Make the RecyclerView of Calendar Tasks hide here
+            viewBinding.rcvCalendar.visibility = View.GONE
         }
 
         viewBinding.btnToggleTask.setOnClickListener {
-            //TODO: Make the RecyclerView of Calendar Tasks show here
+            viewBinding.rcvCalendar.visibility = View.VISIBLE
             viewBinding.rcvSP.visibility = View.GONE
         }
     }
