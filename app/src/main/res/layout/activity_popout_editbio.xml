@@ -1,0 +1,62 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:elevation="4dp"
+    android:background="@drawable/rounded_input"
+    android:gravity="center">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Edit Bio"
+        android:textSize="20sp"
+        android:textColor="#69B665"
+        android:textStyle="bold"
+        android:paddingBottom="16dp" />
+
+    <EditText
+        android:id="@+id/edit_bio_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter your bio"
+        android:background="@drawable/rounded_input"
+        android:padding="16dp"
+        android:inputType="textMultiLine"
+        android:maxLines="4"
+        android:minLines="3"
+        android:textColor="#333333"
+        android:textColorHint="#888888"
+        android:textSize="16sp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/cancel_edit_bio_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:background="@drawable/rounded_input"
+            android:textColor="#69B665"
+            android:textSize="14sp"
+            android:padding="12dp"
+            android:layout_marginEnd="16dp" />
+
+        <Button
+            android:id="@+id/save_bio_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save"
+            android:background="@drawable/yellow_green_button"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:padding="12dp" />
+    </LinearLayout>
+</LinearLayout>

@@ -14,8 +14,21 @@
         tools:targetApi="31">
         <activity
             android:name=".SPDetailed"
+            android:name=".AccountSettings"
             android:exported="false"
-            android:theme="@style/Theme.AppCompat"/>
+        android:theme="@style/Theme.AppCompat" />
+        <activity
+            android:name=".RegisterPage"
+            android:exported="false"
+        android:theme="@style/Theme.AppCompat" />
+        <activity
+            android:name=".LoginPage"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat" />
+        <activity
+            android:name=".SPView"
+            android:exported="false"
+            android:theme="@style/Theme.AppCompat" />
         <activity
             android:name=".SPCreate"
             android:exported="false"
