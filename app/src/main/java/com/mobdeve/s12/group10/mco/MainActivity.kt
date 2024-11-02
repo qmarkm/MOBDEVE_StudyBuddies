@@ -27,6 +27,11 @@ class MainActivity : ComponentActivity() {
         viewBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
 
+        viewBinding.btnCalendar.setOnClickListener {
+            val intent = Intent(this, Calendar::class.java)
+            this.startActivity(intent)
+        }
+
         viewBinding.btnStudyPact.setOnClickListener {
             val intent = Intent(this, MainStudyPacts::class.java)
             this.startActivity(intent)

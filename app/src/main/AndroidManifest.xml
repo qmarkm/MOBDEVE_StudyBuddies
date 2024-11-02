@@ -13,13 +13,22 @@
         android:theme="@style/Theme.Group10MCO"
         tools:targetApi="31">
         <activity
+            android:name=".Calendar"
+            android:exported="false" />
+        <activity
+            android:name=".ui.theme.Calendar"
+            android:exported="false" />
+        <activity
+            android:name=".calendar"
+            android:exported="false" />
+        <activity
             android:name=".AccountSettings"
             android:exported="false"
             android:theme="@style/Theme.AppCompat" />
         <activity
             android:name=".RegisterPage"
             android:exported="false"
-        android:theme="@style/Theme.AppCompat" />
+            android:theme="@style/Theme.AppCompat" />
         <activity
             android:name=".LoginPage"
             android:exported="false"
@@ -43,7 +52,7 @@
             android:name=".SPDetailed"
             android:exported="false"
             android:theme="@style/Theme.AppCompat"
-            android:windowSoftInputMode="adjustPan"/>
+            android:windowSoftInputMode="adjustPan" />
         <activity
             android:name=".MainStudyPacts"
             android:exported="false"
