@@ -7,7 +7,8 @@ import android.content.Context
 import android.os.Bundle
 import android.widget.DatePicker
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Calendar
+import java.util.Locale
 
 /**
  * Credits to: https://developer.android.com/develop/ui/views/components/pickers
