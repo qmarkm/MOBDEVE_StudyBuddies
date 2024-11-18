@@ -35,6 +35,8 @@ class MainActivity : ComponentActivity() {
         viewBinding.rcvSP.layoutManager = LinearLayoutManager(this)
         viewBinding.rcvSP.visibility = View.GONE
 
+
+
         viewBinding.btnToggleSP.setOnClickListener {
             viewBinding.rcvSP.visibility = View.VISIBLE
             viewBinding.rcvCalendar.visibility = View.GONE
