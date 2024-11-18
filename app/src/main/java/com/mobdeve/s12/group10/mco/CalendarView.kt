@@ -49,7 +49,12 @@ class CalendarView : AppCompatActivity(), CalendarAdapter.OnItemListener, OnDate
         binding.monthYearTV.text = monthYearFromDate(selectedDate)
         val daysInMonth = daysInMonthArray(selectedDate)
 
-        val calendarAdapter = CalendarAdapter(daysInMonth, this)
+        // Get today's date as string
+        val today = Calendar.getInstance()
+        val todayDate = today.get(Calendar.DAY_OF_MONTH).toString() // Get today's day
+
+        // Pass todayDate to the adapter
+        val calendarAdapter = CalendarAdapter(daysInMonth, this, todayDate)
         val layoutManager = GridLayoutManager(applicationContext, 7)
         binding.calendarRecyclerView.layoutManager = layoutManager
         binding.calendarRecyclerView.adapter = calendarAdapter
@@ -103,6 +108,8 @@ class CalendarView : AppCompatActivity(), CalendarAdapter.OnItemListener, OnDate
         selectedDate = calendar
         setMonthView()
     }
+
+
 
     fun weeklyAction(view: View) {
         startActivity(Intent(this, WeekView::class.java))
