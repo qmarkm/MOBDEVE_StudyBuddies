@@ -46,7 +46,7 @@ class CalendarView : AppCompatActivity(), CalendarAdapter.OnItemListener, OnDate
     }
 
     private fun setMonthView() {
-        binding.txtMonthYear.text = monthYearFromDate(selectedDate)
+        binding.monthYearTV.text = monthYearFromDate(selectedDate)
         val daysInMonth = daysInMonthArray(selectedDate)
 
         val calendarAdapter = CalendarAdapter(daysInMonth, this)
@@ -102,5 +102,9 @@ class CalendarView : AppCompatActivity(), CalendarAdapter.OnItemListener, OnDate
 
         selectedDate = calendar
         setMonthView()
+    }
+
+    fun weeklyAction(view: View) {
+        startActivity(Intent(this, WeekView::class.java))
     }
 }
