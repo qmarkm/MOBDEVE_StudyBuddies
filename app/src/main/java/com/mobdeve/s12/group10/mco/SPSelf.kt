@@ -26,5 +26,22 @@ class SPSelf : AppCompatActivity() {
         viewBinding.btnReturn.setOnClickListener {
             finish()
         }
+
+        viewBinding.btnAccount.setOnClickListener {
+            val intent = Intent(this, AccountSettings::class.java)
+            this.startActivity(intent)
+        }
+
+        viewBinding.btnCalendar.setOnClickListener {
+            val intent = Intent(this, CalendarView::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            this.startActivity(intent)
+        }
+
+        viewBinding.btnHome.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            this.startActivity(intent)
+        }
     }
 }

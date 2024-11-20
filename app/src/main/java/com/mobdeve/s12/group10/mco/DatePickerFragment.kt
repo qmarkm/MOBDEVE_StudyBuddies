@@ -21,6 +21,7 @@ interface OnDatePass {
 
 class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener {
     private lateinit var dataPasser: OnDatePass
+    private var listener: ((year: Int, month: Int, dayOfMonth: Int) -> Unit)? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)

@@ -9,11 +9,14 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.s12.group10.mco.databinding.DialogTaskDetailedBinding
 import com.mobdeve.s12.group10.mco.databinding.TaskSmallLayoutBinding
 
-class TaskAdapter(private val context : Context, private val tasks: ArrayList<Task>): RecyclerView.Adapter<TaskViewHolder>() {
+class TaskAdapter(private val context : Context, private val fragmentActivity: FragmentActivity, private val tasks: ArrayList<Task>): RecyclerView.Adapter<TaskViewHolder>(), OnDatePass, OnTimePass {
+    private lateinit var dialogBinding: DialogTaskDetailedBinding
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         val taskViewBinding: TaskSmallLayoutBinding = TaskSmallLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return TaskViewHolder(taskViewBinding)
@@ -32,7 +35,7 @@ class TaskAdapter(private val context : Context, private val tasks: ArrayList<Ta
     }
 
     private fun showEditTaskDialog(context: Context, task: Task) {
-        val dialogBinding = DialogTaskDetailedBinding.inflate(LayoutInflater.from(context))
+        dialogBinding = DialogTaskDetailedBinding.inflate(LayoutInflater.from(context))
         val dialog = AlertDialog.Builder(context)
             .setView(dialogBinding.root)
             .create()
@@ -49,11 +52,29 @@ class TaskAdapter(private val context : Context, private val tasks: ArrayList<Ta
             dialog.dismiss()
         }
 
+        dialogBinding.lyvEditDate.setOnClickListener{
+            val newFragment = DatePickerFragment()
+            newFragment.show(fragmentActivity.supportFragmentManager, "datePicker")
+        }
+
+        dialogBinding.lyvEditTime.setOnClickListener{
+            val newFragment = TimePickerFragment()
+            newFragment.show(fragmentActivity.supportFragmentManager, "timePicker")
+        }
+
         dialogBinding.editActivityTitleInput.setText(task.name)
-        dialogBinding.editActivityDateInput.setText(task.date)
-        dialogBinding.editActivityTimeInput.setText(task.time)
+        dialogBinding.editActivityDateInput.setText(FormatDateTime.formatDate(task.date))
+        dialogBinding.editActivityTimeInput.setText(FormatDateTime.formatTime(task.time))
         dialogBinding.editActivityDescriptionInput.setText(task.desc)
 
         dialog.show()
+    }
+
+    override fun onDatePass(data: String) {
+        dialogBinding.editActivityDateInput.setText(data)
+    }
+
+    override fun onTimePass(data: String) {
+        dialogBinding.editActivityTimeInput.setText(data)
     }
 }

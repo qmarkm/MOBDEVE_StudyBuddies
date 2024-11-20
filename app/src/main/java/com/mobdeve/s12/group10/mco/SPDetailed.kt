@@ -1,6 +1,7 @@
 package com.mobdeve.s12.group10.mco
 
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.view.WindowManager
 import android.widget.Button
@@ -51,6 +52,29 @@ class SPDetailed : AppCompatActivity() {
 
         viewBinding.btnUpdate.setOnClickListener {
             showUpdateDialog()
+        }
+
+        viewBinding.btnStudyPact.setOnClickListener {
+            val intent = Intent(this, MainStudyPacts::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            this.startActivity(intent)
+        }
+
+        viewBinding.btnAccount.setOnClickListener {
+            val intent = Intent(this, AccountSettings::class.java)
+            this.startActivity(intent)
+        }
+
+        viewBinding.btnCalendar.setOnClickListener {
+            val intent = Intent(this, CalendarView::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            this.startActivity(intent)
+        }
+
+        viewBinding.btnHome.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            this.startActivity(intent)
         }
     }
 

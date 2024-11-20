@@ -19,9 +19,10 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-class CalendarView : AppCompatActivity(), CalendarAdapter.OnItemListener, OnDatePass {
+class CalendarView : AppCompatActivity(), CalendarAdapter.OnItemListener, OnDatePass, OnTimePass {
 
     private lateinit var binding: ActivityCalendarViewBinding
+    private lateinit var dialogBinding: DialogTaskCreateBinding
 
     companion object {
         var selectedDate: Calendar = Calendar.getInstance()
@@ -39,7 +40,7 @@ class CalendarView : AppCompatActivity(), CalendarAdapter.OnItemListener, OnDate
             insets
         }
 
-        binding.rcvTasks.adapter = TaskAdapter(this, DataGenerator.loadTasks())
+        binding.rcvTasks.adapter = TaskAdapter(this, this, DataGenerator.loadTasks())
         binding.rcvTasks.layoutManager = LinearLayoutManager(this)
 
         binding.btnCreate.setOnClickListener {
@@ -49,15 +50,20 @@ class CalendarView : AppCompatActivity(), CalendarAdapter.OnItemListener, OnDate
         setMonthView()
 
         binding.btnStudyPact.setOnClickListener {
-            startActivity(Intent(this, MainStudyPacts::class.java))
+            val intent = Intent(this, MainStudyPacts::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            this.startActivity(intent)
         }
 
         binding.btnAccount.setOnClickListener {
-            startActivity(Intent(this, AccountSettings::class.java))
+            val intent = Intent(this, AccountSettings::class.java)
+            this.startActivity(intent)
         }
 
         binding.btnHome.setOnClickListener {
-            startActivity(Intent(this, MainActivity::class.java))
+            val intent = Intent(this, MainActivity::class.java)
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+            this.startActivity(intent)
         }
     }
 
@@ -115,7 +121,7 @@ class CalendarView : AppCompatActivity(), CalendarAdapter.OnItemListener, OnDate
             Toast.makeText(this, message, Toast.LENGTH_LONG).show()
         }
     }
-
+/*
     override fun onDatePass(data: String) {
         val format = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
         val calendar = Calendar.getInstance()
@@ -123,19 +129,29 @@ class CalendarView : AppCompatActivity(), CalendarAdapter.OnItemListener, OnDate
 
         selectedDate = calendar
         setMonthView()
-    }
+    }*/
 
     fun weeklyAction(view: View) {
         startActivity(Intent(this, WeekView::class.java))
     }
 
     fun showCreateTaskDialog() {
-        val dialogBinding = DialogTaskCreateBinding.inflate(layoutInflater)
+        dialogBinding = DialogTaskCreateBinding.inflate(layoutInflater)
         val dialog = AlertDialog.Builder(this)
             .setView(dialogBinding.root)
             .create()
 
         dialog.dismiss()
+
+        dialogBinding.lyvEditDate.setOnClickListener {
+            val newFragment = DatePickerFragment()
+            newFragment.show(supportFragmentManager, "datePicker")
+        }
+
+        dialogBinding.lyvEditTime.setOnClickListener {
+            val newFragment = TimePickerFragment()
+            newFragment.show(supportFragmentManager, "timePicker")
+        }
 
         dialogBinding.saveActivityButton.setOnClickListener {
             //TODO: Create and save
@@ -143,5 +159,13 @@ class CalendarView : AppCompatActivity(), CalendarAdapter.OnItemListener, OnDate
         }
 
         dialog.show()
+    }
+
+    override fun onDatePass(data: String) {
+        dialogBinding.editActivityDateInput.setText(data)
+    }
+
+    override fun onTimePass(data: String) {
+        dialogBinding.editActivityTimeInput.setText(data)
     }
 }
