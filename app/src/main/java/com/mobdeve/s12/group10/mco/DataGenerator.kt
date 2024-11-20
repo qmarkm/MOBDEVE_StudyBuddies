@@ -71,5 +71,43 @@ class DataGenerator {
 
             return data
         }
+
+        fun loadTasks(): ArrayList<Task> {
+            val data = ArrayList<Task>()
+            data.add(
+                Task(
+                    "MOBDEVE MCO2",
+                    "2024-10-26",
+                    "18:00",
+                    "Frontend to a Mobile Phone"
+                )
+            )
+            data.add(
+                Task(
+                    "MOBDEVE MCO3",
+                    "2024-11-23",
+                    "20:00",
+                    "Complete functionality of a Mobile Phone"
+                )
+            )
+            data.add(
+                Task(
+                    "CCDSALG MCO2",
+                    "2024-10-29",
+                    "12:00",
+                    "Hash Table to multiple Strings"
+                )
+            )
+            data.add(
+                Task(
+                    "CCAPDEV MCO1",
+                    "2024-12-01",
+                    "18:00",
+                    "Proposal for the Website"
+                )
+            )
+
+            return data
+        }
     }
 }

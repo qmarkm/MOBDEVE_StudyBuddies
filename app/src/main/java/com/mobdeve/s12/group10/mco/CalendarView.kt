@@ -1,14 +1,20 @@
 package com.mobdeve.s12.group10.mco
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobdeve.s12.group10.mco.databinding.ActivityCalendarViewBinding
+import com.mobdeve.s12.group10.mco.databinding.DialogTaskCreateBinding
+import com.mobdeve.s12.group10.mco.databinding.DialogTaskDetailedBinding
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -16,7 +22,10 @@ import java.util.Locale
 class CalendarView : AppCompatActivity(), CalendarAdapter.OnItemListener, OnDatePass {
 
     private lateinit var binding: ActivityCalendarViewBinding
-    private var selectedDate: Calendar = Calendar.getInstance()
+
+    companion object {
+        var selectedDate: Calendar = Calendar.getInstance()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,6 +37,13 @@ class CalendarView : AppCompatActivity(), CalendarAdapter.OnItemListener, OnDate
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        binding.rcvTasks.adapter = TaskAdapter(this, DataGenerator.loadTasks())
+        binding.rcvTasks.layoutManager = LinearLayoutManager(this)
+
+        binding.btnCreate.setOnClickListener {
+            showCreateTaskDialog()
         }
 
         setMonthView()
@@ -109,9 +125,23 @@ class CalendarView : AppCompatActivity(), CalendarAdapter.OnItemListener, OnDate
         setMonthView()
     }
 
-
-
     fun weeklyAction(view: View) {
         startActivity(Intent(this, WeekView::class.java))
+    }
+
+    fun showCreateTaskDialog() {
+        val dialogBinding = DialogTaskCreateBinding.inflate(layoutInflater)
+        val dialog = AlertDialog.Builder(this)
+            .setView(dialogBinding.root)
+            .create()
+
+        dialog.dismiss()
+
+        dialogBinding.saveActivityButton.setOnClickListener {
+            //TODO: Create and save
+            dialog.dismiss()
+        }
+
+        dialog.show()
     }
 }
