@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "208003261029",
+    "project_id": "mobdeve-study-buddy",
+    "storage_bucket": "mobdeve-study-buddy.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:208003261029:android:13d2742aa609bcc70e1c8c",
+        "android_client_info": {
+          "package_name": "com.mobdeve.s12.group10.mco"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA7b1LvCvG57SQRX_lBewkmQHCvJ5dIW_0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
