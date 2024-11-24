@@ -81,13 +81,12 @@
         android:layout_width="0dp"
         android:layout_height="50sp"
         android:layout_marginStart="25dp"
-        android:layout_marginTop="19dp"
         android:layout_marginEnd="25dp"
+        android:background="@drawable/button_gradient3"
+        android:drawableStart="@drawable/location"
         android:ems="10"
         android:hint="Location"
         android:inputType="text"
-        android:background="@drawable/button_gradient3"
-        android:drawableStart="@drawable/location"
         android:paddingLeft="10sp"
         android:textColor="@color/babyGreen"
         android:textColorHint="@color/babyGreen"
@@ -95,15 +94,14 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.455" />
+        app:layout_constraintTop_toBottomOf="@+id/lytPickTime"
+        app:layout_constraintVertical_bias="0.056" />
 
     <EditText
         android:id="@+id/txvDescField"
         android:layout_width="0dp"
         android:layout_height="150dp"
         android:layout_marginStart="25dp"
-        android:layout_marginTop="19dp"
         android:layout_marginEnd="25dp"
         android:background="@drawable/button_gradient3"
         android:ems="10"
@@ -117,8 +115,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.66" />
+        app:layout_constraintTop_toBottomOf="@+id/txvLocationField"
+        app:layout_constraintVertical_bias="0.111" />
 
     <LinearLayout
         android:id="@+id/lytPickDate"

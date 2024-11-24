@@ -5,6 +5,8 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.Firebase
+import com.google.firebase.FirebaseApp
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.firestore
 import com.mobdeve.s12.group10.mco.databinding.ActivitySpcreateBinding
 import java.text.SimpleDateFormat
@@ -38,7 +40,8 @@ class SPCreate : AppCompatActivity(), OnDatePass, OnTimePass {
             val inputFormat : SimpleDateFormat = SimpleDateFormat("MMMM dd, yyyy hh:mm a", Locale.getDefault())
 
             //TODO: Save to SQLite database here
-            val db = Firebase.firestore
+            FirebaseApp.initializeApp(this)
+            val db = FirebaseFirestore.getInstance()
 
             val spname : String = viewBinding.txvTitleField.text.toString()
             val spcreator : Int = -1      //TODO: Logged-in user's ID here
@@ -55,7 +58,16 @@ class SPCreate : AppCompatActivity(), OnDatePass, OnTimePass {
             Log.d("TAG", "spdatetime: $spdatetime")
             Log.d("TAG", "splocation: $splocation")
             Log.d("TAG", "spdescription: $spdescription")
-
+/*
+            val sp = hashMapOf(
+                "id" to 0,
+                "name" to spname,
+                "creator" to spcreator,
+                "dateTime" to spdatetime,
+                "location" to splocation,
+                "description" to spdescription,
+                "joiningUsers" to spcreator.toString()
+            )*/
 
             val studyPact = StudyPact (
                 id = spcreator,
