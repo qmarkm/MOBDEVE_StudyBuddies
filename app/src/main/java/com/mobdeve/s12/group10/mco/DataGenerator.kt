@@ -7,7 +7,7 @@ class DataGenerator {
             val data = ArrayList<StudyPact>()
             data.add(
                 StudyPact(
-                    1,
+                    "e",
                     "Temp 1",
                     1,
                     "2024-11-23 08:31 PM",
@@ -18,7 +18,7 @@ class DataGenerator {
             )
             data.add(
                 StudyPact(
-                    2,
+                    "f",
                     "Temp 2",
                     1,
                     "2024-12-05 03:15 PM",
@@ -29,7 +29,7 @@ class DataGenerator {
             )
             data.add(
                 StudyPact(
-                    3,
+                    "g",
                     "Temp 3",
                     1,
                     "2024-10-10 09:00 AM",
@@ -40,7 +40,7 @@ class DataGenerator {
             )
             data.add(
                 StudyPact(
-                    4,
+                    "w",
                     "Temp 4",
                     1,
                     "2024-11-15 07:45 PM",
@@ -51,7 +51,7 @@ class DataGenerator {
             )
             data.add(
                 StudyPact(
-                    5,
+                    "q",
                     "Temp 5",
                     1,
                     "2024-12-20 02:20 PM",
@@ -62,7 +62,7 @@ class DataGenerator {
             )
             data.add(
                 StudyPact(
-                    6,
+                    "i",
                     "Temp 6",
                     1,
                     "2024-09-30 05:55 PM",
@@ -73,7 +73,7 @@ class DataGenerator {
             )
             data.add(
                 StudyPact(
-                    7,
+                    "n",
                     "Temp 7",
                     1,
                     "2024-11-01 06:30 PM",

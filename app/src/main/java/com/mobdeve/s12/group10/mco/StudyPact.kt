@@ -5,9 +5,8 @@ import java.util.Calendar
 
 //TODO: Finish class, temporarily made for RecyclerView parameters
 
-
 data class StudyPact (
-    val id : Int,
+    val _id: String,
     val name: String,
     val creator: Int,
     val dateTime: String,
