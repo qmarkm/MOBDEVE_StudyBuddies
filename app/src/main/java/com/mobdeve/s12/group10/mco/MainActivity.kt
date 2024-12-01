@@ -48,6 +48,9 @@ class MainActivity : AppCompatActivity() {
                 val timestamp : Timestamp = document.getTimestamp("dateTime") ?: Timestamp.now()
                 val spdatetime = inputFormat.format(timestamp.toDate())
 
+                val joiningUsers = document.get("joiningUsers") as? List<Long> ?: listOf()
+                val alJoiningUsers = ArrayList(joiningUsers.map { it.toInt() })
+
                 val sp = StudyPact(
                     document.id,
                     document.getString("name") ?: "Error",
@@ -55,7 +58,7 @@ class MainActivity : AppCompatActivity() {
                     spdatetime.toString(),
                     document.getString("location") ?: "De La Salle University",
                     document.getString("description") ?: "Error: No values returned",
-                    document.getString("joiningUsers") ?: "-1"
+                    alJoiningUsers
                 )
                 spArray.add(sp)
             }

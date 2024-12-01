@@ -13,7 +13,7 @@ class DataGenerator {
                     "2024-11-23 08:31 PM",
                     "DLSU Gokongwei",
                     "Study for finals",
-                    "1, 2, 3"
+                    ArrayList(List(10) { (1..100).random() })
                 )
             )
             data.add(
@@ -24,7 +24,7 @@ class DataGenerator {
                     "2024-12-05 03:15 PM",
                     "UP Diliman",
                     "Project meeting",
-                    "4, 5, 6"
+                    ArrayList(List(10) { (1..100).random() })
                 )
             )
             data.add(
@@ -35,7 +35,7 @@ class DataGenerator {
                     "2024-10-10 09:00 AM",
                     "Ateneo Library",
                     "Research workshop",
-                    "7, 8, 9"
+                    ArrayList(List(10) { (1..100).random() })
                 )
             )
             data.add(
@@ -46,7 +46,7 @@ class DataGenerator {
                     "2024-11-15 07:45 PM",
                     "UST Main",
                     "Exam review",
-                    "10, 11, 12"
+                    ArrayList(List(10) { (1..100).random() })
                 )
             )
             data.add(
@@ -57,7 +57,7 @@ class DataGenerator {
                     "2024-12-20 02:20 PM",
                     "FEU Study Hall",
                     "Lab assignment",
-                    "13, 14, 15"
+                    ArrayList(List(10) { (1..100).random() })
                 )
             )
             data.add(
@@ -68,7 +68,7 @@ class DataGenerator {
                     "2024-09-30 05:55 PM",
                     "DLSU Gokongwei",
                     "Finals prep",
-                    "1, 3, 5"
+                    ArrayList(List(10) { (1..100).random() })
                 )
             )
             data.add(
@@ -79,7 +79,7 @@ class DataGenerator {
                     "2024-11-01 06:30 PM",
                     "UP Diliman",
                     "Mock exams",
-                    "2, 4, 6"
+                    ArrayList(List(10) { (1..100).random() })
                 )
             )
 

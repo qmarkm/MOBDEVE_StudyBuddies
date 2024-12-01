@@ -39,52 +39,48 @@ class SPCreate : AppCompatActivity(), OnDatePass, OnTimePass {
         }
 
         viewBinding.btnSubmit.setOnClickListener {
-            val inputFormat : SimpleDateFormat = SimpleDateFormat("MMMM dd, yyyy hh:mm a", Locale.getDefault())
+            if (checkInputFields()) {
+                val inputFormat : SimpleDateFormat = SimpleDateFormat("MMMM dd, yyyy hh:mm a", Locale.getDefault())
 
-            FirebaseApp.initializeApp(this)
-            val db = FirebaseFirestore.getInstance()
+                FirebaseApp.initializeApp(this)
+                val db = FirebaseFirestore.getInstance()
 
-            val spname : String = viewBinding.txvTitleField.text.toString()
-            val spcreator : Int = -1      //TODO: Logged-in user's ID here
-            val spdate : String = viewBinding.txvDateField.text.toString()
-            val sptime : String = viewBinding.txvTimeField.text.toString()
-            val splocation : String = viewBinding.txvLocationField.text.toString()
-            val spdescription : String = viewBinding.txvDescField.text.toString()
+                val spname : String = viewBinding.txvTitleField.text.toString()
+                val spcreator : Int = -1      //TODO: Logged-in user's ID here
+                val spdate : String = viewBinding.txvDateField.text.toString()
+                val sptime : String = viewBinding.txvTimeField.text.toString()
+                val splocation : String = viewBinding.txvLocationField.text.toString()
+                val spdescription : String = viewBinding.txvDescField.text.toString()
 
-            val dateTime = "$spdate $sptime"
-            val parsedDate: Date = inputFormat.parse(dateTime)
-            val spdatetime: Timestamp = Timestamp(parsedDate)
+                val dateTime = "$spdate $sptime"
+                val parsedDate: Date = inputFormat.parse(dateTime)
+                val spdatetime: Timestamp = Timestamp(parsedDate)
 
-            val arrayJoiningUsers = ArrayList<Int>()
-            arrayJoiningUsers.add(spcreator)
+                val arrayJoiningUsers = ArrayList<Int>()
+                arrayJoiningUsers.add(spcreator)
 
-            val studyPact = hashMapOf(
-                "name" to spname,
-                "creator" to spcreator,
-                "dateTime" to spdatetime,
-                "location" to splocation,
-                "description" to spdescription,
-                "joiningUsers" to arrayJoiningUsers
-            )
-           /*
-            val studyPact = StudyPact (
-                name = spname,
-                creator = spcreator,
-                dateTime = spdatetime,
-                location = splocation,
-                description = spdescription,
-                joiningUsers = spcreator.toString()     //Have the creator auto-join their event
-            )*/
+                val studyPact = hashMapOf(
+                    "name" to spname,
+                    "creator" to spcreator,
+                    "dateTime" to spdatetime,
+                    "location" to splocation,
+                    "description" to spdescription,
+                    "joiningUsers" to arrayJoiningUsers
+                )
 
-            db.collection("studyPacts").add(studyPact).addOnSuccessListener { documentReference ->
-                Log.d("TAG", "DocumentSnapshot added with ID: ${documentReference.id}")
-                Toast.makeText(this, "Study Pact \"" + spname + "\" created.", Toast.LENGTH_SHORT).show()
+                db.collection("studyPacts").add(studyPact).addOnSuccessListener { documentReference ->
+                    Log.d("TAG", "DocumentSnapshot added with ID: ${documentReference.id}")
+                    Toast.makeText(this, "Study Pact \"" + spname + "\" created.", Toast.LENGTH_SHORT).show()
+                }
+                .addOnFailureListener { e ->
+                    Log.w("TAG", "Error adding document", e)
+                }
+
+                finish()
+            } else {
+                Toast.makeText(this, "Please input every field", Toast.LENGTH_SHORT).show()
+                //TODO: Make borders red
             }
-            .addOnFailureListener { e ->
-                Log.w("TAG", "Error adding document", e)
-            }
-
-            finish()
         }
     }
 
@@ -94,5 +90,24 @@ class SPCreate : AppCompatActivity(), OnDatePass, OnTimePass {
 
     override fun onTimePass(data: String) {
         viewBinding.txvTimeField.text = data
+    }
+
+    private fun checkInputFields() : Boolean {
+        if (viewBinding.txvTimeField.text.isNullOrBlank())
+            return false
+
+        if (viewBinding.txvDescField.text.isNullOrBlank())
+            return false
+
+        if (viewBinding.txvTitleField.text.isNullOrBlank())
+            return false
+
+        if (viewBinding.txvLocationField.text.isNullOrBlank())
+            return false
+
+        if (viewBinding.txvDescField.text.isNullOrBlank())
+            return false
+
+        return true
     }
 }
