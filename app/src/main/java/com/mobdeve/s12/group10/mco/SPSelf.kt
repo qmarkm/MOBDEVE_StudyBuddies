@@ -92,7 +92,7 @@ class SPSelf : AppCompatActivity(), OnDatePass, OnTimePass {
         val dialogViewBinding = DialogSpupdateBinding.inflate(layoutInflater)
 
         createDialog = Dialog(this, R.style.DialogStyle)
-        createDialog!!.setContentView(dialogViewBinding.root) // Use the binding root
+        createDialog!!.setContentView(dialogViewBinding.root)
 
         createDialog!!.window?.setBackgroundDrawableResource(R.drawable.button4)
 

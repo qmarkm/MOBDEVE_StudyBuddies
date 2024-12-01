@@ -7,12 +7,14 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.mobdeve.s12.group10.mco.databinding.ActivitySpdetailedBinding
+import com.mobdeve.s12.group10.mco.databinding.DialogSpupdateBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -21,12 +23,13 @@ import java.util.Locale
  *      For Dialog popup
  */
 
-class SPDetailed : AppCompatActivity() {
+class SPDetailed : AppCompatActivity(), OnDatePass, OnTimePass {
     private lateinit var viewBinding: ActivitySpdetailedBinding
     private lateinit var spTitle: String
     private lateinit var spDesc: String
     private lateinit var spDateTime: String
     private lateinit var spLocation: String
+    private var updateDialog: Dialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +54,7 @@ class SPDetailed : AppCompatActivity() {
         }
 
         viewBinding.btnUpdate.setOnClickListener {
-            showUpdateDialog()
+            showUpdateDialog(this)
         }
 
         viewBinding.btnStudyPact.setOnClickListener {
@@ -92,30 +95,69 @@ class SPDetailed : AppCompatActivity() {
         return readableFormat.format(dbFormat.parse(time))
     }
 
-    fun showUpdateDialog(){
-        val dialog = Dialog(this, R.style.DialogStyle)
-        dialog.setContentView(R.layout.dialog_spupdate)
+    fun showUpdateDialog(activity: AppCompatActivity){
+        val dialogViewBinding = DialogSpupdateBinding.inflate(layoutInflater)
 
-        dialog.getWindow()?.setBackgroundDrawableResource(R.drawable.button4)
+        updateDialog = Dialog(this, R.style.DialogStyle)
+        updateDialog!!.setContentView(dialogViewBinding.root)
 
-        val btnClose = dialog.findViewById<ImageButton>(R.id.btnClose)
+        updateDialog!!.getWindow()?.setBackgroundDrawableResource(R.drawable.button4)
+
+        val btnClose = dialogViewBinding.btnClose
         btnClose.setOnClickListener{
-            dialog.dismiss()
+            updateDialog!!.dismiss()
         }
 
-        val btnUpdate = dialog.findViewById<Button>(R.id.btnUpdate)
+        val btnUpdate = dialogViewBinding.btnUpdate
         btnUpdate.setOnClickListener{
             //TODO: Update parameters here
-            dialog.dismiss()
+            updateDialog!!.dismiss()
         }
 
-        dialog.findViewById<TextView>(R.id.txvTitleField).text = spTitle
-        dialog.findViewById<TextView>(R.id.txvTitle).text = "Update " + spTitle
-        dialog.findViewById<TextView>(R.id.txvDateField).text = formatDate(spDateTime)
-        dialog.findViewById<TextView>(R.id.txvTimeField).text = formatTime(spDateTime)
-        dialog.findViewById<TextView>(R.id.txvLocationField).text = spLocation
-        dialog.findViewById<TextView>(R.id.txvDescField).text = spDesc
+        dialogViewBinding.lytPickDate.setOnClickListener {
+            val newFragment = DatePickerFragment(updateDialog!!)
+            newFragment.show(activity.supportFragmentManager, "datePicker")
+        }
 
-        dialog.show()
+        dialogViewBinding.lytPickTime.setOnClickListener {
+            val newFragment = TimePickerFragment(updateDialog!!)
+            newFragment.show(activity.supportFragmentManager, "timePicker")
+        }
+
+        updateDialog!!.findViewById<TextView>(R.id.txvTitleField).text = spTitle
+        updateDialog!!.findViewById<TextView>(R.id.txvTitle).text = "Update " + spTitle
+        updateDialog!!.findViewById<TextView>(R.id.txvDateField).text = formatDate(spDateTime)
+        updateDialog!!.findViewById<TextView>(R.id.txvTimeField).text = formatTime(spDateTime)
+        updateDialog!!.findViewById<TextView>(R.id.txvLocationField).text = spLocation
+        updateDialog!!.findViewById<TextView>(R.id.txvDescField).text = spDesc
+
+        updateDialog!!.show()
+    }
+
+    override fun onDatePass(data: String) {
+        updateDialog!!.findViewById<TextView>(R.id.txvDateField)?.text = data
+    }
+
+    override fun onTimePass(data: String) {
+        updateDialog!!.findViewById<TextView>(R.id.txvTimeField)?.text = data
+    }
+
+    fun checkInputFields() : Boolean {
+        if (updateDialog!!.findViewById<TextView>(R.id.txvTitleField).text.isNullOrBlank())
+            return false
+
+        if (updateDialog!!.findViewById<TextView>(R.id.txvDateField).text.isNullOrBlank())
+            return false
+
+        if (updateDialog!!.findViewById<TextView>(R.id.txvTimeField).text.isNullOrBlank())
+            return false
+
+        if (updateDialog!!.findViewById<TextView>(R.id.txvLocationField).text.isNullOrBlank())
+            return false
+
+        if (updateDialog!!.findViewById<TextView>(R.id.txvDescField).text.isNullOrBlank())
+            return false
+
+        return true
     }
 }
