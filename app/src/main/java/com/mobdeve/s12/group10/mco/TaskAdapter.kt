@@ -51,7 +51,7 @@ class TaskAdapter(private val context : Context, private val fragmentActivity: F
             //TODO: Update RecyclerView to remove view
             dialog.dismiss()
         }
-
+/*
         dialogBinding.lyvEditDate.setOnClickListener{
             val newFragment = DatePickerFragment()
             newFragment.show(fragmentActivity.supportFragmentManager, "datePicker")
@@ -61,7 +61,7 @@ class TaskAdapter(private val context : Context, private val fragmentActivity: F
             val newFragment = TimePickerFragment()
             newFragment.show(fragmentActivity.supportFragmentManager, "timePicker")
         }
-
+*/
         dialogBinding.editActivityTitleInput.setText(task.name)
         dialogBinding.editActivityDateInput.setText(FormatDateTime.formatDate(task.date))
         dialogBinding.editActivityTimeInput.setText(FormatDateTime.formatTime(task.time))
