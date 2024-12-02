@@ -9,13 +9,18 @@ import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.google.firebase.FirebaseApp
+import com.google.firebase.Timestamp
+import com.google.firebase.firestore.FirebaseFirestore
 import com.mobdeve.s12.group10.mco.databinding.ActivitySpdetailedBinding
 import com.mobdeve.s12.group10.mco.databinding.DialogSpupdateBinding
 import java.text.SimpleDateFormat
+import java.util.Date
 import java.util.Locale
 
 /**
@@ -29,6 +34,7 @@ class SPDetailed : AppCompatActivity(), OnDatePass, OnTimePass {
     private lateinit var spDesc: String
     private lateinit var spDateTime: String
     private lateinit var spLocation: String
+    private lateinit var spId: String
     private var updateDialog: Dialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,6 +43,7 @@ class SPDetailed : AppCompatActivity(), OnDatePass, OnTimePass {
         viewBinding = ActivitySpdetailedBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
 
+        spId = intent.getStringExtra("SP_ID").toString()
         spTitle = intent.getStringExtra("SP_TITLE").toString()
         spDesc = intent.getStringExtra("SP_DESCRIPTION").toString()
         spDateTime = intent.getStringExtra("SP_DATETIME").toString()
@@ -110,8 +117,36 @@ class SPDetailed : AppCompatActivity(), OnDatePass, OnTimePass {
 
         val btnUpdate = dialogViewBinding.btnUpdate
         btnUpdate.setOnClickListener{
-            //TODO: Update parameters here
-            updateDialog!!.dismiss()
+            //Submit request to update Study Pact
+            if (checkInputFields()) {
+                val inputFormat = SimpleDateFormat("MMMM dd, yyyy hh:mm a", Locale.getDefault())
+
+                FirebaseApp.initializeApp(this)
+                val db = FirebaseFirestore.getInstance()
+
+                val dateTime = "${dialogViewBinding.txvDateField.text.toString()} ${dialogViewBinding.txvTimeField.text.toString()}"
+                val parsedDate: Date = inputFormat.parse(dateTime)
+
+                spTitle = dialogViewBinding.txvTitleField.text.toString()
+                spDesc = dialogViewBinding.txvDescField.text.toString()
+                val spDateTimeTs : Timestamp = Timestamp(parsedDate)
+                spLocation = dialogViewBinding.txvLocationField.text.toString()
+
+                val studyPact = hashMapOf(
+                    "name" to spTitle,
+                    "dateTime" to spDateTimeTs,
+                    "location" to spLocation,
+                    "description" to spDesc,
+                )
+
+                db.collection("studyPacts").document(spId).update(studyPact as Map<String, Any>).addOnSuccessListener {
+                    Toast.makeText(this, "Study Pact \"$spTitle\" updated.", Toast.LENGTH_SHORT).show()
+                }
+
+                updateDialog!!.dismiss()
+            } else {
+                Toast.makeText(this, "Please input every field", Toast.LENGTH_SHORT).show()
+            }
         }
 
         dialogViewBinding.lytPickDate.setOnClickListener {

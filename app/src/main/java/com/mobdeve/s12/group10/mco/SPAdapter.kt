@@ -23,6 +23,7 @@ class SPAdapter(private val studyPacts: ArrayList<StudyPact>): RecyclerView.Adap
             val intent = Intent(holder.itemView.context, SPDetailed::class.java)
 
             //TODO: Pass appropriate data here when StudyPacts class is complete
+            intent.putExtra("SP_ID", studyPacts.get(position)._id)
             intent.putExtra("SP_TITLE", studyPacts.get(position).name)
             intent.putExtra("SP_DATETIME", studyPacts.get(position).dateTime)
             intent.putExtra("SP_LOCATION", studyPacts.get(position).location)
