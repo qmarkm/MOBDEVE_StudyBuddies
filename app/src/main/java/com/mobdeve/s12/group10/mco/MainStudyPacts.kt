@@ -50,7 +50,8 @@ class MainStudyPacts : AppCompatActivity() {
                     spdatetime.toString(),
                     document.getString("location") ?: "De La Salle University",
                     document.getString("description") ?: "Error: No values returned",
-                    alJoiningUsers
+                    alJoiningUsers,
+                    document.getString("status") ?: "Cancelled"
                 )
                 spArray.add(sp)
             }

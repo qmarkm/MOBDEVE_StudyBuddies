@@ -12,5 +12,6 @@ data class StudyPact (
     val dateTime: String,
     val location: String,
     val description: String,
-    val joiningUsers: ArrayList<Int>
+    val joiningUsers: ArrayList<Int>,
+    val status: String
 )

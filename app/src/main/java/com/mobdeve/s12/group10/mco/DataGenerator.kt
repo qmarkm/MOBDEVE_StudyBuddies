@@ -2,7 +2,7 @@ package com.mobdeve.s12.group10.mco
 
 //TODO: Remove this in final app
 class DataGenerator {
-    companion object {
+    companion object {/*
         fun loadData(): ArrayList<StudyPact> {
             val data = ArrayList<StudyPact>()
             data.add(
@@ -85,7 +85,7 @@ class DataGenerator {
 
 
             return data
-        }
+        }*/
 
         fun loadTasks(): ArrayList<Task> {
             val data = ArrayList<Task>()

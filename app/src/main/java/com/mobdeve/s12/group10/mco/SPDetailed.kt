@@ -3,6 +3,8 @@ package com.mobdeve.s12.group10.mco
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageButton
@@ -11,6 +13,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
@@ -35,6 +38,7 @@ class SPDetailed : AppCompatActivity(), OnDatePass, OnTimePass {
     private lateinit var spDateTime: String
     private lateinit var spLocation: String
     private lateinit var spId: String
+    private lateinit var spStatus: String
     private var updateDialog: Dialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,19 +52,20 @@ class SPDetailed : AppCompatActivity(), OnDatePass, OnTimePass {
         spDesc = intent.getStringExtra("SP_DESCRIPTION").toString()
         spDateTime = intent.getStringExtra("SP_DATETIME").toString()
         spLocation = intent.getStringExtra("SP_LOCATION").toString()
-
+        spStatus = intent.getStringExtra("SP_STATUS").toString()
 
         viewBinding.txvTitle.text = spTitle
         viewBinding.txvDesc.text = spDesc
         viewBinding.txvDateField.text = formatDate(spDateTime)
         viewBinding.txvTimeField.text = formatTime(spDateTime)
         viewBinding.txvLocationField.text = spLocation
+        viewBinding.txvStatus.text = "Status: " + spStatus
 
         viewBinding.btnReturn.setOnClickListener {
             finish()
         }
 
-        viewBinding.btnUpdate.setOnClickListener {
+        viewBinding.btnCreate.setOnClickListener {
             showUpdateDialog(this)
         }
 
@@ -85,6 +90,11 @@ class SPDetailed : AppCompatActivity(), OnDatePass, OnTimePass {
             val intent = Intent(this, MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             this.startActivity(intent)
+        }
+
+        if (spStatus == "Cancelled" || spStatus == "Finished") {
+            viewBinding.btnJoin.visibility = View.GONE
+            viewBinding.btnCreate.visibility = View.GONE
         }
     }
 
@@ -115,7 +125,8 @@ class SPDetailed : AppCompatActivity(), OnDatePass, OnTimePass {
             updateDialog!!.dismiss()
         }
 
-        val btnUpdate = dialogViewBinding.btnUpdate
+        //Unsure why it cannot be renamed to btnUpdate, thinking it's because dialog_spupdate.xml and dialog_spcreate.xml are linked
+        val btnUpdate = dialogViewBinding.btnCreate
         btnUpdate.setOnClickListener{
             //Submit request to update Study Pact
             if (checkInputFields()) {
@@ -147,6 +158,37 @@ class SPDetailed : AppCompatActivity(), OnDatePass, OnTimePass {
             } else {
                 Toast.makeText(this, "Please input every field", Toast.LENGTH_SHORT).show()
             }
+        }
+
+
+        /**
+         * Credits for delete alert from https://stackoverflow.com/questions/59340099/how-to-set-confirm-delete-alertdialogue-box-in-kotlin
+         */
+        dialogViewBinding.btnDelete.setOnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setMessage("Are you sure you want to permanently cancel ${spTitle}?")
+                .setCancelable(false)
+                .setPositiveButton("Yes") { dialog, id ->
+                    //TODO: Delete logic here
+                    FirebaseApp.initializeApp(this)
+                    val db = FirebaseFirestore.getInstance()
+
+                    val cancel = hashMapOf(
+                        "status" to "Cancelled"
+                    )
+
+                    db.collection("studyPacts").document(spId).update(cancel as Map<String, Any>).addOnSuccessListener {
+                        Toast.makeText(this, "Study Pact \"$spTitle\" cancelled.", Toast.LENGTH_SHORT).show()
+                    }
+
+                    updateDialog!!.dismiss()
+                    finish()
+                }
+                .setNegativeButton("No") { dialog, id ->
+                    dialog.dismiss()
+                }
+            val alert = builder.create()
+            alert.show()
         }
 
         dialogViewBinding.lytPickDate.setOnClickListener {

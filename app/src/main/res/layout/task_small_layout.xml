@@ -77,7 +77,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/txvShortDesc"
+            android:id="@+id/txvStatus"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="5dp"

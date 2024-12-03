@@ -29,6 +29,7 @@ class SPAdapter(private val studyPacts: ArrayList<StudyPact>): RecyclerView.Adap
             intent.putExtra("SP_LOCATION", studyPacts.get(position).location)
             intent.putExtra("SP_DESCRIPTION", studyPacts.get(position).description)
             intent.putExtra("SP_USERS", studyPacts.get(position).joiningUsers)              //ArrayList?
+            intent.putExtra("SP_STATUS", studyPacts.get(position).status)
 
             holder.itemView.context.startActivity(intent)
         }

@@ -40,71 +40,6 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.012" />
 
-    <LinearLayout
-        android:id="@+id/lytPickDate"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginBottom="17dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txvTitle"
-        app:layout_constraintVertical_bias="0.048">
-
-        <ImageView
-            android:id="@+id/btnPickDate"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/button_gradient2"
-            android:padding="5dp"
-            android:src="@drawable/calendar_edit" />
-
-        <TextView
-            android:id="@+id/txvDateField"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="15dp"
-            android:text="Select a Date"
-            android:textColor="#000000"
-            android:textSize="16dp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/lytPickTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.843"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/txvTitle"
-        app:layout_constraintVertical_bias="0.047">
-
-        <ImageView
-            android:id="@+id/btnPickTime"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:background="@drawable/button_gradient2"
-            android:padding="5dp"
-            android:src="@drawable/time" />
-
-        <TextView
-            android:id="@+id/txvTimeField"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="15dp"
-            android:text="Select a Time"
-            android:textColor="#000000"
-            android:textSize="16dp" />
-    </LinearLayout>
-
     <TextView
         android:id="@+id/txvLocationField"
         android:layout_width="wrap_content"
@@ -126,6 +61,55 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/lytPickDate"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <LinearLayout
+        android:id="@+id/lytPickTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="36dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.848"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txvTitle"
+        app:layout_constraintVertical_bias="0.163">
+
+        <ImageView
+            android:id="@+id/btnPickTime"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/button_gradient2"
+            android:padding="5dp"
+            android:src="@drawable/time" />
+
+        <TextView
+            android:id="@+id/txvTimeField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="15dp"
+            android:text="Select a Time"
+            android:textColor="#000000"
+            android:textSize="16dp" />
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnCreate"
+        android:layout_width="wrap_content"
+        android:layout_height="37dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/button4"
+        android:text="Update"
+        android:textColor="@color/swampyGreen"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/btnJoin"
+        app:layout_constraintTop_toBottomOf="@+id/txvDesc"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
@@ -160,21 +144,59 @@
         app:layout_constraintTop_toBottomOf="@+id/txvDesc"
         app:layout_constraintVertical_bias="0.0" />
 
-    <Button
-        android:id="@+id/btnUpdate"
+    <LinearLayout
+        android:id="@+id/lytPickDate"
         android:layout_width="wrap_content"
-        android:layout_height="37dp"
-        android:layout_marginStart="10dp"
-        android:layout_marginTop="25dp"
-        android:background="@drawable/button4"
-        android:text="Update"
-        android:textColor="@color/swampyGreen"
-        android:textStyle="bold"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="25dp"
+        android:layout_marginBottom="17dp"
+        android:gravity="center"
+        android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/btnJoin"
-        app:layout_constraintTop_toBottomOf="@+id/txvDesc"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txvTitle"
+        app:layout_constraintVertical_bias="0.168">
+
+        <ImageView
+            android:id="@+id/btnPickDate"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@drawable/button_gradient2"
+            android:padding="5dp"
+            android:src="@drawable/calendar_edit" />
+
+        <TextView
+            android:id="@+id/txvDateField"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:text="Select a Date"
+            android:textColor="#000000"
+            android:textSize="16dp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/txvStatus"
+        android:layout_width="351dp"
+        android:layout_height="47dp"
+        android:layout_margin="25dp"
+        android:layout_marginBottom="543dp"
+        android:background="@drawable/button_gradient3"
+        android:ems="10"
+        android:gravity="center_vertical"
+        android:padding="10sp"
+        android:paddingStart="20dp"
+        android:text="Status: "
+        android:textColor="@color/babyGreen"
+        android:textColorHint="@color/babyGreen"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/lyvFooter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txvTitle"
         app:layout_constraintVertical_bias="0.0" />
 
     <LinearLayout
@@ -184,12 +206,11 @@
         android:background="@color/babyGreen"
         android:gravity="center"
         android:orientation="horizontal"
-        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="1.0"
-        tools:layout_editor_absoluteY="731dp">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
         <ImageButton
             android:id="@+id/btnHome"

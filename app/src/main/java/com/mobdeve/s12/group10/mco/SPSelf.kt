@@ -15,6 +15,7 @@ import com.google.firebase.FirebaseApp
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
 import com.mobdeve.s12.group10.mco.databinding.ActivitySpselfBinding
+import com.mobdeve.s12.group10.mco.databinding.DialogSpcreateBinding
 import com.mobdeve.s12.group10.mco.databinding.DialogSpupdateBinding
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -22,7 +23,7 @@ import java.util.Locale
 
 class SPSelf : AppCompatActivity(), OnDatePass, OnTimePass {
     private lateinit var viewBinding: ActivitySpselfBinding
-    private lateinit var dialogViewBinding : DialogSpupdateBinding
+    private lateinit var dialogViewBinding : DialogSpcreateBinding
     private var createDialog: Dialog? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,7 +53,8 @@ class SPSelf : AppCompatActivity(), OnDatePass, OnTimePass {
                     spdatetime.toString(),
                     document.getString("location") ?: "De La Salle University",
                     document.getString("description") ?: "Error: No values returned",
-                    alJoiningUsers
+                    alJoiningUsers,
+                    document.getString("status") ?: "Cancelled"
                 )
                 spArray.add(sp)
             }
@@ -89,7 +91,7 @@ class SPSelf : AppCompatActivity(), OnDatePass, OnTimePass {
     }
 
     fun showCreateDialog(activity: AppCompatActivity) {
-        val dialogViewBinding = DialogSpupdateBinding.inflate(layoutInflater)
+        val dialogViewBinding = DialogSpcreateBinding.inflate(layoutInflater)
 
         createDialog = Dialog(this, R.style.DialogStyle)
         createDialog!!.setContentView(dialogViewBinding.root)
@@ -100,7 +102,7 @@ class SPSelf : AppCompatActivity(), OnDatePass, OnTimePass {
             createDialog!!.dismiss()
         }
 
-        dialogViewBinding.btnUpdate.setOnClickListener {
+        dialogViewBinding.btnCreate.setOnClickListener {
             if (checkInputFields()) {
                 val inputFormat = SimpleDateFormat("MMMM dd, yyyy hh:mm a", Locale.getDefault())
 
@@ -142,8 +144,6 @@ class SPSelf : AppCompatActivity(), OnDatePass, OnTimePass {
 
             createDialog!!.dismiss()
         }
-        dialogViewBinding.btnUpdate.text = "Create"
-
         dialogViewBinding.txvTitle.text = "Create Study Pact"
 
         dialogViewBinding.lytPickDate.setOnClickListener {

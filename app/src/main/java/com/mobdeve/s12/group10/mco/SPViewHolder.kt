@@ -10,7 +10,7 @@ class SPViewHolder(private var viewBinding: SpSmallLayoutBinding): RecyclerView.
         this.viewBinding.txvSPTitle.text = sp.name
         this.viewBinding.txvSPDate.text = formatDate(sp.dateTime)
         this.viewBinding.txvSPPlace.text = sp.location
-        this.viewBinding.txvShortDesc.text = sp.description
+        this.viewBinding.txvStatus.text = sp.status
     }
 
     fun formatDate(date: String): String{
