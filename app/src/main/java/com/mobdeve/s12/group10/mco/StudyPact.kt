@@ -8,10 +8,10 @@ import java.util.Calendar
 data class StudyPact (
     val _id: String,
     val name: String,
-    val creator: Int,
+    val creator: String,
     val dateTime: String,
     val location: String,
     val description: String,
-    val joiningUsers: ArrayList<Int>,
+    val joiningUsers: ArrayList<String>,
     val status: String
 )

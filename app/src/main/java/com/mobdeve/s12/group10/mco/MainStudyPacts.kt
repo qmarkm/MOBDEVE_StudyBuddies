@@ -1,7 +1,9 @@
 package com.mobdeve.s12.group10.mco
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.FirebaseApp
@@ -36,24 +38,25 @@ class MainStudyPacts : AppCompatActivity() {
 
         val spArray = ArrayList<StudyPact>()
         db.collection("studyPacts").get().addOnSuccessListener { result ->
-            for (document in result) {      //TODO: Filter where user is part of SP
+            for (document in result) {
                 val timestamp : Timestamp = document.getTimestamp("dateTime") ?: Timestamp.now()
                 val spdatetime = inputFormat.format(timestamp.toDate())
 
-                val joiningUsers = document.get("joiningUsers") as? List<Long> ?: listOf()
-                val alJoiningUsers = ArrayList(joiningUsers.map { it.toInt() })
-
-                val sp = StudyPact(
-                    document.id,
-                    document.getString("name") ?: "Error",
-                    document.getLong("creator")?.toInt() ?: -1,
-                    spdatetime.toString(),
-                    document.getString("location") ?: "De La Salle University",
-                    document.getString("description") ?: "Error: No values returned",
-                    alJoiningUsers,
-                    document.getString("status") ?: "Cancelled"
-                )
-                spArray.add(sp)
+                Log.d("TAG", getLoggedInUserEmail().toString())
+                val joiningUsers = ArrayList(document.get("joiningUsers") as? List<String>)
+                if (getLoggedInUserEmail().toString() in joiningUsers) {
+                    val sp = StudyPact(
+                        document.id,
+                        document.getString("name") ?: "Error",
+                        document.getString("creator") ?: "dummy@email.com",
+                        spdatetime.toString(),
+                        document.getString("location") ?: "De La Salle University",
+                        document.getString("description") ?: "Error: No values returned",
+                        ArrayList(document.get("joiningUsers") as? List<String>),
+                        document.getString("status") ?: "Cancelled"
+                    )
+                    spArray.add(sp)
+                }
             }
         }
 
@@ -73,5 +76,10 @@ class MainStudyPacts : AppCompatActivity() {
         viewBinding.btnReturn.setOnClickListener {
             finish()
         }
+    }
+
+    private fun getLoggedInUserEmail(): String? {
+        val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        return sharedPreferences.getString("loggedInUserEmail", null)
     }
 }

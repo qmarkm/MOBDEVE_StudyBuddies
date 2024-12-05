@@ -1,8 +1,11 @@
 package com.mobdeve.s12.group10.mco
 
+import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
 import android.util.Log
 import android.widget.Button
 import android.widget.ImageButton
@@ -20,11 +23,14 @@ import com.mobdeve.s12.group10.mco.databinding.DialogSpupdateBinding
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import android.text.TextWatcher
 
 class SPSelf : AppCompatActivity(), OnDatePass, OnTimePass {
     private lateinit var viewBinding: ActivitySpselfBinding
-    private lateinit var dialogViewBinding : DialogSpcreateBinding
+    private lateinit var dialogViewBinding: DialogSpcreateBinding
     private var createDialog: Dialog? = null
+    private lateinit var spArray: ArrayList<StudyPact>
+    private lateinit var studyPactAdapter: SPAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,37 +38,12 @@ class SPSelf : AppCompatActivity(), OnDatePass, OnTimePass {
         viewBinding = ActivitySpselfBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
 
-        FirebaseApp.initializeApp(this)
-        val db = FirebaseFirestore.getInstance()
-
-        val inputFormat : SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault())
-
-        val spArray = ArrayList<StudyPact>()
-        db.collection("studyPacts").get().addOnSuccessListener { result ->
-            for (document in result) {
-                val timestamp : Timestamp = document.getTimestamp("dateTime") ?: Timestamp.now()
-                val spdatetime = inputFormat.format(timestamp.toDate())
-
-                val joiningUsers = document.get("joiningUsers") as? List<Long> ?: listOf()
-                val alJoiningUsers = ArrayList(joiningUsers.map { it.toInt() })
-
-                val sp = StudyPact(
-                    document.id,
-                    document.getString("name") ?: "Error",
-                    document.getLong("creator")?.toInt() ?: -1,
-                    spdatetime.toString(),
-                    document.getString("location") ?: "De La Salle University",
-                    document.getString("description") ?: "Error: No values returned",
-                    alJoiningUsers,
-                    document.getString("status") ?: "Cancelled"
-                )
-                spArray.add(sp)
-            }
-
-            viewBinding.rcvStudyPacts.adapter = SPAdapter(spArray)
-        }
-
+        spArray = ArrayList()
+        studyPactAdapter = SPAdapter(spArray)
         viewBinding.rcvStudyPacts.layoutManager = LinearLayoutManager(this)
+        viewBinding.rcvStudyPacts.adapter = studyPactAdapter
+
+        fetchSP()
 
         viewBinding.btnAddSP.setOnClickListener {
             showCreateDialog(this)
@@ -88,6 +69,56 @@ class SPSelf : AppCompatActivity(), OnDatePass, OnTimePass {
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             this.startActivity(intent)
         }
+
+        viewBinding.search.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                search(s.toString())
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+    }
+
+    private fun search(query: String) {
+        val filteredList = ArrayList<StudyPact>()
+        for (sp in spArray) {
+            if (sp.name.contains(query, true)) {
+                filteredList.add(sp)
+            }
+        }
+        studyPactAdapter.filterList(filteredList)
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private fun fetchSP() {
+        FirebaseApp.initializeApp(this)
+        val db = FirebaseFirestore.getInstance()
+
+        val inputFormat: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault())
+
+        db.collection("studyPacts").whereIn("creator", listOf(getLoggedInUserEmail())).get().addOnSuccessListener { result ->
+            spArray.clear() // Clear the list before adding new data
+            for (document in result) {
+                val timestamp: Timestamp = document.getTimestamp("dateTime") ?: Timestamp.now()
+                val spdatetime = inputFormat.format(timestamp.toDate())
+
+                val sp = StudyPact(
+                    document.id,
+                    document.getString("name") ?: "Error",
+                    document.getString("creator") ?: "dummy@email.com",
+                    spdatetime.toString(),
+                    document.getString("location") ?: "De La Salle University",
+                    document.getString("description") ?: "Error: No values returned",
+                    ArrayList(document.get("joiningUsers") as? List<String>),
+                    document.getString("status") ?: "Cancelled"
+                )
+                spArray.add(sp)
+            }
+
+            studyPactAdapter.notifyDataSetChanged()
+        }
     }
 
     fun showCreateDialog(activity: AppCompatActivity) {
@@ -110,7 +141,7 @@ class SPSelf : AppCompatActivity(), OnDatePass, OnTimePass {
                 val db = FirebaseFirestore.getInstance()
 
                 val spname = dialogViewBinding.txvTitleField.text.toString()
-                val spcreator: Int = -1 // TODO: Logged-in user's ID here
+                val spcreator: String = getLoggedInUserEmail().toString()
                 val spdate = dialogViewBinding.txvDateField.text.toString()
                 val sptime = dialogViewBinding.txvTimeField.text.toString()
                 val splocation = dialogViewBinding.txvLocationField.text.toString()
@@ -120,7 +151,7 @@ class SPSelf : AppCompatActivity(), OnDatePass, OnTimePass {
                 val parsedDate: Date = inputFormat.parse(dateTime)
                 val spdatetime: Timestamp = Timestamp(parsedDate)
 
-                val arrayJoiningUsers = ArrayList<Int>()
+                val arrayJoiningUsers = ArrayList<String>()
                 arrayJoiningUsers.add(spcreator)
 
                 val studyPact = hashMapOf(
@@ -129,7 +160,8 @@ class SPSelf : AppCompatActivity(), OnDatePass, OnTimePass {
                     "dateTime" to spdatetime,
                     "location" to splocation,
                     "description" to spdescription,
-                    "joiningUsers" to arrayJoiningUsers
+                    "joiningUsers" to arrayJoiningUsers,
+                    "status" to "Upcoming"
                 )
 
                 db.collection("studyPacts").add(studyPact).addOnSuccessListener { documentReference ->
@@ -137,6 +169,7 @@ class SPSelf : AppCompatActivity(), OnDatePass, OnTimePass {
                 }
 
                 createDialog!!.dismiss()
+                fetchSP()
             } else {
                 Toast.makeText(this, "Please input every field", Toast.LENGTH_SHORT).show()
                 // TODO: Make borders red
@@ -159,6 +192,11 @@ class SPSelf : AppCompatActivity(), OnDatePass, OnTimePass {
         createDialog!!.show()
     }
 
+    private fun getLoggedInUserEmail(): String? {
+        val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        return sharedPreferences.getString("loggedInUserEmail", null)
+    }
+
     override fun onDatePass(data: String) {
         createDialog!!.findViewById<TextView>(R.id.txvDateField)?.text = data
     }
@@ -167,7 +205,7 @@ class SPSelf : AppCompatActivity(), OnDatePass, OnTimePass {
         createDialog!!.findViewById<TextView>(R.id.txvTimeField)?.text = data
     }
 
-    fun checkInputFields() : Boolean {
+    fun checkInputFields(): Boolean {
         if (createDialog!!.findViewById<TextView>(R.id.txvTitleField).text.isNullOrBlank())
             return false
 

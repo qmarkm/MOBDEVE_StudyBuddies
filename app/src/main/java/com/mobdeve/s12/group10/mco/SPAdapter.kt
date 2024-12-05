@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.s12.group10.mco.databinding.SpSmallLayoutBinding
 
-class SPAdapter(private val studyPacts: ArrayList<StudyPact>): RecyclerView.Adapter<SPViewHolder>() {
+class SPAdapter(private var studyPacts: ArrayList<StudyPact>): RecyclerView.Adapter<SPViewHolder>() {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SPViewHolder {
         val spViewBinding: SpSmallLayoutBinding = SpSmallLayoutBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return SPViewHolder(spViewBinding)
@@ -33,5 +33,10 @@ class SPAdapter(private val studyPacts: ArrayList<StudyPact>): RecyclerView.Adap
 
             holder.itemView.context.startActivity(intent)
         }
+    }
+
+    fun filterList(filteredList: ArrayList<StudyPact>) {
+        studyPacts = filteredList
+        notifyDataSetChanged()
     }
 }

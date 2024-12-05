@@ -1,5 +1,6 @@
 package com.mobdeve.s12.group10.mco
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -48,20 +49,20 @@ class MainActivity : AppCompatActivity() {
                 val timestamp : Timestamp = document.getTimestamp("dateTime") ?: Timestamp.now()
                 val spdatetime = inputFormat.format(timestamp.toDate())
 
-                val joiningUsers = document.get("joiningUsers") as? List<Long> ?: listOf()
-                val alJoiningUsers = ArrayList(joiningUsers.map { it.toInt() })
-
-                val sp = StudyPact(
-                    document.id,
-                    document.getString("name") ?: "Error",
-                    document.getLong("creator")?.toInt() ?: -1,
-                    spdatetime.toString(),
-                    document.getString("location") ?: "De La Salle University",
-                    document.getString("description") ?: "Error: No values returned",
-                    alJoiningUsers,
-                    document.getString("status") ?: "Cancelled"
-                )
-                spArray.add(sp)
+                val joiningUsers = ArrayList(document.get("joiningUsers") as? List<String>)
+                if (getLoggedInUserEmail().toString() in joiningUsers) {
+                    val sp = StudyPact(
+                        document.id,
+                        document.getString("name") ?: "Error",
+                        document.getString("creator") ?: "dummy@email.com",
+                        spdatetime.toString(),
+                        document.getString("location") ?: "De La Salle University",
+                        document.getString("description") ?: "Error: No values returned",
+                        ArrayList(document.get("joiningUsers") as? List<String>),
+                        document.getString("status") ?: "Cancelled"
+                    )
+                    spArray.add(sp)
+                }
             }
         }
 
@@ -81,5 +82,10 @@ class MainActivity : AppCompatActivity() {
             viewBinding.rcvCalendar.visibility = View.VISIBLE
             viewBinding.rcvSP.visibility = View.GONE
         }
+    }
+
+    private fun getLoggedInUserEmail(): String? {
+        val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        return sharedPreferences.getString("loggedInUserEmail", null)
     }
 }

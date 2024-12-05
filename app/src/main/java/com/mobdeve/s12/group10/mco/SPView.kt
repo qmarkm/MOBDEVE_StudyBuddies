@@ -2,11 +2,10 @@ package com.mobdeve.s12.group10.mco
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.FirebaseApp
 import com.google.firebase.Timestamp
@@ -17,6 +16,8 @@ import java.util.Locale
 
 class SPView : AppCompatActivity() {
     private lateinit var viewBinding: ActivitySpviewBinding
+    private lateinit var spArray : ArrayList<StudyPact>
+    private lateinit var studyPactAdapter: SPAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,37 +25,13 @@ class SPView : AppCompatActivity() {
         viewBinding = ActivitySpviewBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
 
-        FirebaseApp.initializeApp(this)
-        val db = FirebaseFirestore.getInstance()
-
-        val inputFormat : SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault())
-
-        val spArray = ArrayList<StudyPact>()
-        db.collection("studyPacts").get().addOnSuccessListener { result ->
-            for (document in result) {
-                val timestamp : Timestamp = document.getTimestamp("dateTime") ?: Timestamp.now()
-                val spdatetime = inputFormat.format(timestamp.toDate())
-
-                val joiningUsers = document.get("joiningUsers") as? List<Long> ?: listOf()
-                val alJoiningUsers = ArrayList(joiningUsers.map { it.toInt() })
-
-                val sp = StudyPact(
-                    document.id,
-                    document.getString("name") ?: "Error",
-                    document.getLong("creator")?.toInt() ?: -1,
-                    spdatetime.toString(),
-                    document.getString("location") ?: "De La Salle University",
-                    document.getString("description") ?: "Error: No values returned",
-                    alJoiningUsers,
-                    document.getString("status") ?: "Cancelled"
-                )
-                spArray.add(sp)
-            }
-
-            viewBinding.rcvStudyPacts.adapter = SPAdapter(spArray)
-        }
-
+        // Initialize the adapter with an empty list
+        spArray = ArrayList()
+        studyPactAdapter = SPAdapter(spArray)
         viewBinding.rcvStudyPacts.layoutManager = LinearLayoutManager(this)
+        viewBinding.rcvStudyPacts.adapter = studyPactAdapter
+
+        fetchSP()
 
         viewBinding.btnReturn.setOnClickListener {
             finish()
@@ -75,6 +52,55 @@ class SPView : AppCompatActivity() {
             val intent = Intent(this, MainActivity::class.java)
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             this.startActivity(intent)
+        }
+
+        viewBinding.search.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(s: Editable?) {
+                search(s.toString())
+            }
+
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+        })
+    }
+
+    private fun search(query: String) {
+        val filteredList = ArrayList<StudyPact>()
+        for (sp in spArray) {
+            if (sp.name.contains(query, true)) {
+                filteredList.add(sp)
+            }
+        }
+        studyPactAdapter.filterList(filteredList)
+    }
+
+    private fun fetchSP() {
+        FirebaseApp.initializeApp(this)
+        val db = FirebaseFirestore.getInstance()
+
+        val inputFormat: SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault())
+
+        db.collection("studyPacts").whereIn("status", listOf("Upcoming", "Ongoing")).get().addOnSuccessListener { result ->
+            spArray.clear() // Clear the list before adding new data
+            for (document in result) {
+                val timestamp: Timestamp = document.getTimestamp("dateTime") ?: Timestamp.now()
+                val spdatetime = inputFormat.format(timestamp.toDate())
+
+                val sp = StudyPact(
+                    document.id,
+                    document.getString("name") ?: "Error",
+                    document.getString("creator") ?: "dummy@email.com",
+                    spdatetime.toString(),
+                    document.getString("location") ?: "De La Salle University",
+                    document.getString("description") ?: "Error: No values returned",
+                    ArrayList(document.get("joiningUsers") as? List<String>),
+                    document.getString("status") ?: "Cancelled"
+                )
+                spArray.add(sp)
+            }
+
+            studyPactAdapter.notifyDataSetChanged()
         }
     }
 }
