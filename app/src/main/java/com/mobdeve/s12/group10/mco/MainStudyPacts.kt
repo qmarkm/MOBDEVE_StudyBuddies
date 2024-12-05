@@ -42,7 +42,6 @@ class MainStudyPacts : AppCompatActivity() {
                 val timestamp : Timestamp = document.getTimestamp("dateTime") ?: Timestamp.now()
                 val spdatetime = inputFormat.format(timestamp.toDate())
 
-                Log.d("TAG", getLoggedInUserEmail().toString())
                 val joiningUsers = ArrayList(document.get("joiningUsers") as? List<String>)
                 if (getLoggedInUserEmail().toString() in joiningUsers) {
                     val sp = StudyPact(
@@ -60,7 +59,7 @@ class MainStudyPacts : AppCompatActivity() {
             }
         }
 
-        viewBinding.rcvStudyPacts.adapter = SPAdapter(spArray)
+        viewBinding.rcvStudyPacts.adapter = SPAdapter(spArray, this)
         viewBinding.rcvStudyPacts.layoutManager = LinearLayoutManager(this)
 
         viewBinding.btnViewSP.setOnClickListener {

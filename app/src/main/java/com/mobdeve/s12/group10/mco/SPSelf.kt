@@ -39,7 +39,7 @@ class SPSelf : AppCompatActivity(), OnDatePass, OnTimePass {
         setContentView(viewBinding.root)
 
         spArray = ArrayList()
-        studyPactAdapter = SPAdapter(spArray)
+        studyPactAdapter = SPAdapter(spArray, this)
         viewBinding.rcvStudyPacts.layoutManager = LinearLayoutManager(this)
         viewBinding.rcvStudyPacts.adapter = studyPactAdapter
 
@@ -81,6 +81,11 @@ class SPSelf : AppCompatActivity(), OnDatePass, OnTimePass {
         })
     }
 
+    override fun onResume(){
+        super.onResume()
+        fetchSP()
+    }
+
     private fun search(query: String) {
         val filteredList = ArrayList<StudyPact>()
         for (sp in spArray) {
@@ -91,7 +96,6 @@ class SPSelf : AppCompatActivity(), OnDatePass, OnTimePass {
         studyPactAdapter.filterList(filteredList)
     }
 
-    @SuppressLint("NotifyDataSetChanged")
     private fun fetchSP() {
         FirebaseApp.initializeApp(this)
         val db = FirebaseFirestore.getInstance()

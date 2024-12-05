@@ -24,10 +24,9 @@ class SPView : AppCompatActivity() {
 
         viewBinding = ActivitySpviewBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
-
-        // Initialize the adapter with an empty list
+        
         spArray = ArrayList()
-        studyPactAdapter = SPAdapter(spArray)
+        studyPactAdapter = SPAdapter(spArray, this)
         viewBinding.rcvStudyPacts.layoutManager = LinearLayoutManager(this)
         viewBinding.rcvStudyPacts.adapter = studyPactAdapter
 
@@ -63,6 +62,11 @@ class SPView : AppCompatActivity() {
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
+    }
+
+    override fun onResume(){
+        super.onResume()
+        fetchSP()
     }
 
     private fun search(query: String) {

@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        viewBinding.rcvSP.adapter = SPAdapter(spArray)
+        viewBinding.rcvSP.adapter = SPAdapter(spArray, this)
         viewBinding.rcvSP.layoutManager = LinearLayoutManager(this)
         viewBinding.rcvSP.visibility = View.GONE
 

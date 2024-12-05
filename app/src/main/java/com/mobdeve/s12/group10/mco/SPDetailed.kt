@@ -1,6 +1,7 @@
 package com.mobdeve.s12.group10.mco
 
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -15,6 +16,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.FirebaseApp
@@ -95,6 +97,39 @@ class SPDetailed : AppCompatActivity(), OnDatePass, OnTimePass {
         if (spStatus == "Cancelled" || spStatus == "Finished") {
             viewBinding.btnJoin.visibility = View.GONE
             viewBinding.btnCreate.visibility = View.GONE
+        }
+
+        viewBinding.btnJoin.setOnClickListener {
+            FirebaseApp.initializeApp(this)
+            val db = FirebaseFirestore.getInstance()
+
+            db.collection("studyPacts").document(spId).get().addOnSuccessListener { result ->
+                val joinedUsers = ArrayList(result.get("joiningUsers") as? List<String>)
+                val wasJoined : Boolean
+                if (getLoggedInUserEmail() in joinedUsers){
+                    wasJoined = true
+                    joinedUsers.remove(getLoggedInUserEmail())
+                    viewBinding.btnJoin.text = "Join"
+                    viewBinding.btnJoin.setTextColor(ContextCompat.getColor(this, R.color.babyGreen))
+                    viewBinding.btnJoin.setBackgroundResource(R.drawable.button_gradient2)
+                } else {
+                    wasJoined = false
+                    joinedUsers.add(getLoggedInUserEmail())
+                    viewBinding.btnJoin.text = "Joined"
+                    viewBinding.btnJoin.setTextColor(ContextCompat.getColor(this, R.color.swampyGreen))
+                    viewBinding.btnJoin.setBackgroundResource(R.drawable.button4)
+                }
+
+                val sp = hashMapOf(
+                    "joiningUsers" to joinedUsers
+                )
+
+                db.collection("studyPacts").document(spId).update(sp as Map<String, Any>).addOnSuccessListener {
+                    if (wasJoined)
+                        Toast.makeText(this, "Left \"${spTitle}\"", Toast.LENGTH_SHORT).show()
+                    else Toast.makeText(this, "Joined \"${spTitle}\" ", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
     }
 
@@ -236,5 +271,10 @@ class SPDetailed : AppCompatActivity(), OnDatePass, OnTimePass {
             return false
 
         return true
+    }
+
+    fun getLoggedInUserEmail(): String? {
+        val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
+        return sharedPreferences.getString("loggedInUserEmail", null)
     }
 }

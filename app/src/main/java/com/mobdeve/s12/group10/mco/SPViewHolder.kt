@@ -5,7 +5,7 @@ import com.mobdeve.s12.group10.mco.databinding.SpSmallLayoutBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-class SPViewHolder(private var viewBinding: SpSmallLayoutBinding): RecyclerView.ViewHolder(viewBinding.root)  {
+class SPViewHolder(var viewBinding: SpSmallLayoutBinding): RecyclerView.ViewHolder(viewBinding.root)  {
     fun bindData(sp: StudyPact){
         this.viewBinding.txvSPTitle.text = sp.name
         this.viewBinding.txvSPDate.text = formatDate(sp.dateTime)
