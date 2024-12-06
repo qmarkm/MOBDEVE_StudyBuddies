@@ -115,21 +115,52 @@ class CalendarView : AppCompatActivity(), CalendarAdapter.OnItemListener, OnDate
         setMonthView()
     }
 
+    private fun filterTasksByDate(tasks: ArrayList<Task>, date: String): ArrayList<Task> {
+        return tasks.filter { it.date == date } as ArrayList<Task>
+    }
+
     override fun onItemClick(position: Int, dayText: String) {
         if (dayText.isNotEmpty()) {
-            val message = "Selected Date $dayText ${monthYearFromDate(selectedDate)}"
-            Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+            try {
+                // Construct the selected date in the format used in the task data: "yyyy-MM-dd"
+                val selectedDate = "${monthYearFromDate(selectedDate)} $dayText"
+                val dateFormat = SimpleDateFormat("MMMM yyyy dd", Locale.getDefault())
+                val parsedDate = dateFormat.parse(selectedDate)
+
+                // Convert to "yyyy-MM-dd" format for task filtering
+                val dateString = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(parsedDate!!)
+
+                // Filter tasks for the selected date
+                val filteredTasks = filterTasksByDate(DataGenerator.loadTasks(), dateString)
+
+                if (filteredTasks.isEmpty()) {
+                    // Handle the case where no tasks exist for the selected date
+                    Toast.makeText(this, "No tasks for $dateString", Toast.LENGTH_SHORT).show()
+                }
+
+                // Update the RecyclerView with the filtered task list
+                binding.rcvTasks.adapter = TaskAdapter(this, this, filteredTasks)
+                binding.rcvTasks.layoutManager = LinearLayoutManager(this)
+
+            } catch (e: Exception) {
+                // Catch any issues and show a meaningful error message
+                e.printStackTrace()
+                Toast.makeText(this, "Error parsing date: ${e.message}", Toast.LENGTH_LONG).show()
+            }
         }
     }
-/*
-    override fun onDatePass(data: String) {
-        val format = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
-        val calendar = Calendar.getInstance()
-        calendar.time = format.parse(data)
 
-        selectedDate = calendar
-        setMonthView()
-    }*/
+
+
+    /*
+        override fun onDatePass(data: String) {
+            val format = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
+            val calendar = Calendar.getInstance()
+            calendar.time = format.parse(data)
+
+            selectedDate = calendar
+            setMonthView()
+        }*/
 
     fun weeklyAction(view: View) {
         startActivity(Intent(this, WeekView::class.java))
