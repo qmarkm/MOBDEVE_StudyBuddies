@@ -65,6 +65,10 @@ class CalendarView : AppCompatActivity(), CalendarAdapter.OnItemListener, OnDate
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
             this.startActivity(intent)
         }
+
+        binding.btnShowAllTasks.setOnClickListener {
+            showAllTasks()
+        }
     }
 
     private fun setMonthView() {
@@ -150,21 +154,16 @@ class CalendarView : AppCompatActivity(), CalendarAdapter.OnItemListener, OnDate
         }
     }
 
+    private fun showAllTasks() {
+        // Load all tasks and update the RecyclerView
+        val allTasks = DataGenerator.loadTasks()
+        binding.rcvTasks.adapter = TaskAdapter(this, this, allTasks)
+        binding.rcvTasks.layoutManager = LinearLayoutManager(this)
 
-
-    /*
-        override fun onDatePass(data: String) {
-            val format = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
-            val calendar = Calendar.getInstance()
-            calendar.time = format.parse(data)
-
-            selectedDate = calendar
-            setMonthView()
-        }*/
-
-    fun weeklyAction(view: View) {
-        startActivity(Intent(this, WeekView::class.java))
+        // Show a confirmation message
+        Toast.makeText(this, "Showing all tasks", Toast.LENGTH_SHORT).show()
     }
+
 
     fun showCreateTaskDialog() {
         dialogBinding = DialogTaskCreateBinding.inflate(layoutInflater)
