@@ -5,13 +5,13 @@ import java.util.Calendar
 
 //TODO: Finish class, temporarily made for RecyclerView parameters
 
-
 data class StudyPact (
-    val id : Int,
+    val _id: String,
     val name: String,
-    val creator: Int,
+    val creator: String,
     val dateTime: String,
     val location: String,
     val description: String,
-    val joiningUsers: String
+    val joiningUsers: ArrayList<String>,
+    val status: String
 )

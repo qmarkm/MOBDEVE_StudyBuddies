@@ -10,6 +10,6 @@ class TaskViewHolder(private var viewBinding: TaskSmallLayoutBinding): RecyclerV
         this.viewBinding.txvTaskTitle.text = task.name
         this.viewBinding.txvTaskDate.text = FormatDateTime.formatDate(task.date)
         this.viewBinding.txvTaskTime.text = FormatDateTime.formatTime(task.time)
-        this.viewBinding.txvShortDesc.text = task.desc
+        //this.viewBinding.txvShortDesc.text = task.desc
     }
 }

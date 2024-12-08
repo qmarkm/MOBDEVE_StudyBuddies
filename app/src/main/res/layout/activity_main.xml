@@ -1,83 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    app:layout_anchorGravity="center_vertical"
     android:background="@color/babyGreen"
+    android:orientation="vertical"
+    app:layout_anchorGravity="center_vertical"
     tools:context=".MainStudyPacts">
-
-    <LinearLayout
-        android:id="@+id/lyvFooter"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:background="@color/babyGreen"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <ImageButton
-            android:id="@+id/btnHome"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="4dp"
-            android:background="@color/babyGreen"
-            android:scaleType="centerInside"
-            android:adjustViewBounds="true"
-            android:maxHeight="40dp"
-            android:maxWidth="40dp"
-            android:src="@drawable/house_md"/>
-
-        <ImageButton
-            android:id="@+id/btnCalendar"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="4dp"
-            android:background="@color/babyGreen"
-            android:scaleType="centerInside"
-            android:adjustViewBounds="true"
-            android:maxHeight="40dp"
-            android:maxWidth="40dp"
-            android:src="@drawable/calendar" />
-
-        <ImageButton
-            android:id="@+id/btnStudyPact"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="4dp"
-            android:background="@color/babyGreen"
-            android:scaleType="centerInside"
-            android:adjustViewBounds="true"
-            android:maxHeight="40dp"
-            android:maxWidth="40dp"
-            android:src="@drawable/study_pact_icon" />
-
-        <ImageButton
-            android:id="@+id/btnAccount"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:padding="4dp"
-            android:background="@color/babyGreen"
-            android:scaleType="centerInside"
-            android:adjustViewBounds="true"
-            android:maxHeight="40dp"
-        android:maxWidth="40dp"
-        android:src="@drawable/person" />
-    </LinearLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:id="@+id/linearLayout"
@@ -126,18 +61,6 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageButton
-                    android:id="@+id/btnHamburger"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="344dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="@drawable/hamburger_white"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
 
@@ -172,27 +95,103 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcvSP"
             android:layout_width="match_parent"
-            android:layout_height="263dp"
-            android:layout_margin="25dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintHeight_percent="0.40"
+            app:layout_constraintBottom_toTopOf="@+id/lyvFooter"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.32"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout"
-            app:layout_constraintVertical_bias="0.497" />
+            app:layout_constraintTop_toBottomOf="@+id/btnToggleSP"
+            app:layout_constraintVertical_bias="0.0" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcvCalendar"
             android:layout_width="match_parent"
-            android:layout_height="263dp"
-            android:layout_margin="25dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="0dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="10dp"
+            app:layout_constraintHeight_percent="0.40"
+            app:layout_constraintBottom_toTopOf="@+id/lyvFooter"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.68"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/linearLayout"
-            app:layout_constraintVertical_bias="0.497"
+            app:layout_constraintTop_toBottomOf="@+id/btnToggleTask"
+            app:layout_constraintVertical_bias="0.0"
             tools:listitem="@layout/actvitiy_main_view" />
+
+        <LinearLayout
+            android:id="@+id/lyvFooter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/babyGreen"
+            android:gravity="center"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintVertical_bias="1.0"
+            tools:layout_editor_absoluteY="731dp">
+
+            <ImageButton
+                android:id="@+id/btnHome"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:background="@color/babyGreen"
+                android:maxWidth="40dp"
+                android:maxHeight="40dp"
+                android:padding="4dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/house_md" />
+
+            <ImageButton
+                android:id="@+id/btnCalendar"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:background="@color/babyGreen"
+                android:maxWidth="40dp"
+                android:maxHeight="40dp"
+                android:padding="4dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/calendar" />
+
+            <ImageButton
+                android:id="@+id/btnStudyPact"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:background="@color/babyGreen"
+                android:maxWidth="40dp"
+                android:maxHeight="40dp"
+                android:padding="4dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/study_pact_icon" />
+
+            <ImageButton
+                android:id="@+id/btnAccount"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:adjustViewBounds="true"
+                android:background="@color/babyGreen"
+                android:maxWidth="40dp"
+                android:maxHeight="40dp"
+                android:padding="4dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/person" />
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

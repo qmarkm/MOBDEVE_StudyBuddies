@@ -6,6 +6,7 @@ import android.app.DatePickerDialog
 import android.content.Context
 import android.os.Bundle
 import android.widget.DatePicker
+import android.widget.TextView
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -19,7 +20,7 @@ interface OnDatePass {
     fun onDatePass(data: String)
 }
 
-class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener {
+class DatePickerFragment(private val dialog: Dialog) : DialogFragment(), DatePickerDialog.OnDateSetListener {
     private lateinit var dataPasser: OnDatePass
     private var listener: ((year: Int, month: Int, dayOfMonth: Int) -> Unit)? = null
 
@@ -44,5 +45,6 @@ class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener 
         val date = dateFormat.format(calendar.time)
 
         dataPasser.onDatePass(date)
+        dialog.findViewById<TextView>(R.id.txvDateField)?.text = date
     }
 }

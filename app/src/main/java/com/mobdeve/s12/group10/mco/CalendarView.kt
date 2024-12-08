@@ -172,7 +172,7 @@ class CalendarView : AppCompatActivity(), CalendarAdapter.OnItemListener, OnDate
             .create()
 
         dialog.dismiss()
-
+/*
         dialogBinding.lyvEditDate.setOnClickListener {
             val newFragment = DatePickerFragment()
             newFragment.show(supportFragmentManager, "datePicker")
@@ -182,7 +182,7 @@ class CalendarView : AppCompatActivity(), CalendarAdapter.OnItemListener, OnDate
             val newFragment = TimePickerFragment()
             newFragment.show(supportFragmentManager, "timePicker")
         }
-
+*/
         dialogBinding.saveActivityButton.setOnClickListener {
             //TODO: Create and save
             dialog.dismiss()

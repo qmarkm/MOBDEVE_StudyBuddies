@@ -8,6 +8,7 @@ import android.content.Context
 import android.os.Bundle
 import android.text.format.DateFormat
 import android.widget.DatePicker
+import android.widget.TextView
 import android.widget.TimePicker
 import java.text.SimpleDateFormat
 import java.util.*
@@ -21,7 +22,7 @@ interface OnTimePass {
     fun onTimePass(data: String)
 }
 
-class TimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListener {
+class TimePickerFragment(private val dialog: Dialog) : DialogFragment(), TimePickerDialog.OnTimeSetListener {
     lateinit var dataPasser: OnTimePass
 
     override fun onAttach(context: Context) {
@@ -47,5 +48,6 @@ class TimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListener 
         val time = timeFormat.format(calendar.time)
 
         dataPasser.onTimePass(time)
+        dialog.findViewById<TextView>(R.id.txvTimeField)?.text = time
     }
 }
