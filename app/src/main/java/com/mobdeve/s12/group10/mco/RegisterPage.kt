@@ -1,21 +1,12 @@
 package com.mobdeve.s12.group10.mco
 
-
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.mobdeve.s12.group10.mco.databinding.ActivityLoginPageBinding
-import com.mobdeve.s12.group10.mco.databinding.ActivityRegisterPageBinding
 import android.widget.Toast
-import com.google.firebase.Firebase
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.firestore
-
+import com.mobdeve.s12.group10.mco.databinding.ActivityRegisterPageBinding
 
 class RegisterPage : AppCompatActivity() {
     private lateinit var viewBinding: ActivityRegisterPageBinding
@@ -37,47 +28,49 @@ class RegisterPage : AppCompatActivity() {
             val password = viewBinding.passwordInput.text.toString().trim()
             val confirmPassword = viewBinding.confirmPasswordInput.text.toString().trim()
 
-            if (password == confirmPassword)
-            {
+            if (password == confirmPassword) {
                 registerUser(name, email, password)
-            }
-            else
-            {
+            } else {
                 Toast.makeText(this, "Passwords do not match", Toast.LENGTH_SHORT).show()
             }
         }
     }
 
-    private fun registerUser(name: String, email: String, password: String)
-    {
+    private fun registerUser(name: String, email: String, password: String) {
         auth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
                     val userId = auth.currentUser?.uid ?: ""
                     saveUserToFirestore(userId, name, email)
-                } else
-                {
+                } else {
                     Toast.makeText(this, "Registration Failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
             }
     }
 
     private fun saveUserToFirestore(userId: String, name: String, email: String) {
+        // Create the user document in the "accounts" collection
         val user = hashMapOf(
             "name" to name,
-            "email" to email
+            "email" to email,
+            "username" to "NAME", // Default username
+            "bio" to "default bio", // Default bio
+            "isDeleted" to false // Default status (false)
         )
 
+        // Save the user data to Firestore under the "accounts" collection
         db.collection("accounts")
             .document(userId)
             .set(user)
-            .addOnSuccessListener{
-                Toast.makeText(this, "Account created successfully!", Toast.LENGTH_SHORT).show()
-                startActivity(Intent(this, LoginPage::class.java))
+            .addOnSuccessListener {
+                Toast.makeText(this, "Registration successful!", Toast.LENGTH_SHORT).show()
+                // Optionally, move to another activity after successful registration
+                val intent = Intent(this, LoginPage::class.java)
+                startActivity(intent)
                 finish()
             }
-            .addOnFailureListener { e ->
-                Toast.makeText(this, "Error saving data: ${e.message}", Toast.LENGTH_SHORT).show()
+            .addOnFailureListener { exception ->
+                Toast.makeText(this, "Failed to save user data: ${exception.message}", Toast.LENGTH_SHORT).show()
             }
     }
 }

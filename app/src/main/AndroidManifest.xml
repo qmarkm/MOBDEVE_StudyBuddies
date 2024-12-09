@@ -12,28 +12,38 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Group10MCO"
         tools:targetApi="31">
+
+
+    <!-- Define LoginPage as the launcher activity -->
         <activity
-            android:name=".EventEdit"
-            android:exported="false" />
-        <activity
-            android:name=".WeekView"
-            android:exported="false" />
-        <activity
-            android:name=".CalendarView"
+            android:name=".LoginPage"
             android:exported="true"
+            android:theme="@style/Theme.AppCompat">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+
+        <activity
+            android:name=".RegisterPage"
+            android:exported="false"
             android:theme="@style/Theme.AppCompat" />
         <activity
             android:name=".AccountSettings"
             android:exported="false"
             android:theme="@style/Theme.AppCompat" />
         <activity
-            android:name=".RegisterPage"
-            android:exported="false"
+            android:name=".CalendarView"
+            android:exported="true"
             android:theme="@style/Theme.AppCompat" />
         <activity
-            android:name=".LoginPage"
-            android:exported="false"
-            android:theme="@style/Theme.AppCompat" />
+            android:name=".WeekView"
+            android:exported="false" />
+        <activity
+            android:name=".EventEdit"
+            android:exported="false" />
         <activity
             android:name=".SPCreate"
             android:exported="false"
@@ -61,14 +71,7 @@
         <activity
             android:name=".MainActivity"
             android:exported="true"
-            android:label="@string/app_name"
-            android:theme="@style/Theme.Group10MCO">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@style/Theme.Group10MCO" />
     </application>
 
 </manifest>

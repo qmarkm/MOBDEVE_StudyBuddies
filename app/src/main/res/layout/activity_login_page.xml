@@ -71,10 +71,12 @@
         android:layout_marginBottom="8dp"
         android:gravity="center"
         android:text="Email"
+        android:textColorLink="#3A3535"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.501"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="#3A3535" />
 
 
     <LinearLayout
@@ -98,7 +100,9 @@
             android:inputType="textEmailAddress"
             android:padding="12dp"
             android:visibility="visible"
-            tools:visibility="visible" />
+            tools:visibility="visible"
+            android:textColor="@android:color/black"
+            />
     </LinearLayout>
 
 
@@ -110,7 +114,8 @@
         android:text="Password"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="#3A3535" />
 
 
     <LinearLayout
@@ -134,6 +139,7 @@
             android:background="@drawable/rounded_input"
             android:hint="Enter your password"
             android:inputType="textPassword"
+            android:textColor="@android:color/black"
             android:padding="12dp" />
     </LinearLayout>
 
