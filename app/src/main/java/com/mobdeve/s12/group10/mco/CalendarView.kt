@@ -1,9 +1,7 @@
 package com.mobdeve.s12.group10.mco
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -14,11 +12,9 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobdeve.s12.group10.mco.databinding.ActivityCalendarViewBinding
 import com.mobdeve.s12.group10.mco.databinding.DialogTaskCreateBinding
-import com.mobdeve.s12.group10.mco.databinding.DialogTaskDetailedBinding
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
-import com.mobdeve.s12.group10.mco.Task
 
 class CalendarView : AppCompatActivity(), CalendarAdapter.OnItemListener, OnDatePass, OnTimePass {
 
@@ -131,33 +127,33 @@ class CalendarView : AppCompatActivity(), CalendarAdapter.OnItemListener, OnDate
     override fun onItemClick(position: Int, dayText: String) {
         if (dayText.isNotEmpty()) {
             try {
-                // Construct the selected date in the format used in the task data: "yyyy-MM-dd"
+                // Construct the selected date string in "MMMM yyyy dd"
                 val selectedDate = "${monthYearFromDate(selectedDate)} $dayText"
                 val dateFormat = SimpleDateFormat("MMMM yyyy dd", Locale.getDefault())
                 val parsedDate = dateFormat.parse(selectedDate)
 
-                // Convert to "yyyy-MM-dd" format for task filtering
-                val dateString = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(parsedDate!!)
+                // Convert parsed date to "yyyy-MM-dd" for database filtering
+                val dbDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                val dateString = dbDateFormat.format(parsedDate!!)
 
-                // Load tasks from the database filtered by date
+                // Retrieve tasks for the selected date
                 val filteredTasks: List<Task> = taskDatabase.getTasksByDate(dateString)
 
                 if (filteredTasks.isEmpty()) {
-                    // Handle the case where no tasks exist for the selected date
                     Toast.makeText(this, "No tasks for $dateString", Toast.LENGTH_SHORT).show()
+                } else {
+                    // Update RecyclerView with filtered tasks
+                    binding.rcvTasks.adapter = TaskAdapter(this, filteredTasks as ArrayList<Task>)
+                    binding.rcvTasks.layoutManager = LinearLayoutManager(this)
                 }
 
-                // Update the RecyclerView with the filtered task list
-                binding.rcvTasks.adapter = TaskAdapter(this, filteredTasks as ArrayList<Task>)
-                binding.rcvTasks.layoutManager = LinearLayoutManager(this)
-
             } catch (e: Exception) {
-                // Catch any issues and show a meaningful error message
                 e.printStackTrace()
                 Toast.makeText(this, "Error parsing date: ${e.message}", Toast.LENGTH_LONG).show()
             }
         }
     }
+
 
     private fun showAllTasks() {
         // Load all tasks from the database
@@ -178,12 +174,12 @@ class CalendarView : AppCompatActivity(), CalendarAdapter.OnItemListener, OnDate
         dialog.dismiss()
 
         dialogBinding.lyvEditDate.setOnClickListener {
-            val newFragment = DatePickerFragment()
+            val newFragment = TaskDatePickerFragment()
             newFragment.show(supportFragmentManager, "datePicker")
         }
 
         dialogBinding.lyvEditTime.setOnClickListener {
-            val newFragment = TimePickerFragment()
+            val newFragment = TaskTimePickerFragment()
             newFragment.show(supportFragmentManager, "timePicker")
         }
 

@@ -2,15 +2,16 @@ package com.mobdeve.s12.group10.mco
 
 import android.app.Activity
 import android.app.Dialog
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.mobdeve.s12.group10.mco.databinding.DialogTaskDetailedBinding
 import com.mobdeve.s12.group10.mco.databinding.TaskSmallLayoutBinding
-import com.mobdeve.s12.group10.mco.Task
+import java.text.SimpleDateFormat
+import java.util.Locale
 
 class TaskAdapter(
     private val context: Activity,
@@ -42,26 +43,61 @@ class TaskAdapter(
         val builder = AlertDialog.Builder(context)
         val dialog = builder.setView(dialogBinding.root).create()
 
+        // Convert the task date to a format suitable for display
+        val formattedDate = try {
+            val dbDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()) // Database format
+            val readableDateFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault()) // User-friendly format
+            val parsedDate = dbDateFormat.parse(task.date) // Parse the task date in "yyyy-MM-dd" format
+            readableDateFormat.format(parsedDate!!) // Convert to "MMMM dd, yyyy" format for display
+        } catch (e: Exception) {
+            e.printStackTrace()
+            task.date // If parsing fails, fallback to the original task date
+        }
+
         // Populate dialog with current task data
         dialogBinding.editActivityTitleInput.setText(task.name)
-        dialogBinding.editActivityDateInput.setText(task.date)
+        dialogBinding.editActivityDateInput.setText(formattedDate)
         dialogBinding.editActivityTimeInput.setText(task.time)
         dialogBinding.editActivityDescriptionInput.setText(task.desc)
 
         dialogBinding.saveActivityButton.setOnClickListener {
-            val updatedTask = task.copy(
-                name = dialogBinding.editActivityTitleInput.text.toString(),
-                date = dialogBinding.editActivityDateInput.text.toString(),
-                time = dialogBinding.editActivityTimeInput.text.toString(),
-                desc = dialogBinding.editActivityDescriptionInput.text.toString()
-            )
+            try {
+                // Ensure the date is in "yyyy-MM-dd" format before saving
+                val inputDate = dialogBinding.editActivityDateInput.text.toString()
+                val formattedDateToSave = try {
+                    val readableDateFormat = SimpleDateFormat("MMMM dd, yyyy", Locale.getDefault())
+                    val dbDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                    val parsedDate = readableDateFormat.parse(inputDate)
+                    dbDateFormat.format(parsedDate!!)
+                } catch (e: Exception) {
+                    inputDate // Fallback to original input if parsing fails
+                }
 
-            // Update task in database
-            taskDatabase.updateTask(updatedTask)
-            tasks[position] = updatedTask // Update the local list
-            notifyItemChanged(position) // Notify adapter to refresh the item
-            dialog.dismiss()
+                // Copy the task and update fields
+                val updatedTask = task.copy(
+                    name = dialogBinding.editActivityTitleInput.text.toString(),
+                    date = formattedDateToSave, // Save date in "yyyy-MM-dd" format
+                    time = dialogBinding.editActivityTimeInput.text.toString(),
+                    desc = dialogBinding.editActivityDescriptionInput.text.toString()
+                )
+
+                // Update task in the database
+                taskDatabase.updateTask(updatedTask)
+                tasks[position] = updatedTask // Update the local list
+                notifyItemChanged(position) // Notify adapter to refresh the item
+
+                // Close the dialog
+                dialog.dismiss()
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(
+                    dialogBinding.root.context,
+                    "Error saving task: ${e.message}",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
+
 
         dialogBinding.deleteActivityButton.setOnClickListener {
             taskDatabase.deleteTask(task) // Pass the entire task object
@@ -72,12 +108,12 @@ class TaskAdapter(
 
 
         dialogBinding.lyvEditDate.setOnClickListener {
-            val newFragment = DatePickerFragment()
+            val newFragment = TaskDatePickerFragment()
             newFragment.show((context as FragmentActivity).supportFragmentManager, "datePicker")
         }
 
         dialogBinding.lyvEditTime.setOnClickListener {
-            val newFragment = TimePickerFragment()
+            val newFragment = TaskTimePickerFragment()
             newFragment.show((context as FragmentActivity).supportFragmentManager, "timePicker")
         }
 
