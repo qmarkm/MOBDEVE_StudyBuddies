@@ -6,10 +6,12 @@ import java.text.SimpleDateFormat
 import java.util.Locale
 
 class TaskViewHolder(private var viewBinding: TaskSmallLayoutBinding): RecyclerView.ViewHolder(viewBinding.root) {
-    fun bindData(task: Task){
+    fun bindData(task: Task) {
+        // Ensure you are using the correct IDs from your layout
         this.viewBinding.txvTaskTitle.text = task.name
         this.viewBinding.txvTaskDate.text = FormatDateTime.formatDate(task.date)
         this.viewBinding.txvTaskTime.text = FormatDateTime.formatTime(task.time)
         //this.viewBinding.txvShortDesc.text = task.desc
     }
 }
+

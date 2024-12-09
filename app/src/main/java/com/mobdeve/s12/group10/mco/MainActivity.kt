@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.FirebaseApp
@@ -20,12 +19,18 @@ class MainActivity : AppCompatActivity() {
     private val spList: SPList = SPList(this)
     private lateinit var spAdapter: SPAdapter
     private var spVisible: Boolean = false
+    private lateinit var taskDatabase: TaskDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         viewBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
+
+        // Initialize TaskDatabase
+        taskDatabase = TaskDatabase(applicationContext)
+
+        loadTasks()
 
         viewBinding.btnStudyPact.setOnClickListener {
             val intent = Intent(this, MainStudyPacts::class.java)
@@ -66,10 +71,12 @@ class MainActivity : AppCompatActivity() {
         viewBinding.rcvSP.adapter = SPAdapter(spArray, this)
         viewBinding.rcvSP.layoutManager = LinearLayoutManager(this)
 
-        viewBinding.rcvCalendar.adapter = TaskAdapter(this, this, DataGenerator.loadTasks())
-        viewBinding.rcvCalendar.layoutManager = LinearLayoutManager(this)
-
         Log.d("TAG", "YEAH ON RESUmE")
         viewBinding.rcvSP.visibility = View.VISIBLE
+        
+    private fun loadTasks() {
+        val tasks = taskDatabase.getAllTasks()
+        viewBinding.rcvCalendar.adapter = TaskAdapter(this, tasks)
+        viewBinding.rcvCalendar.layoutManager = LinearLayoutManager(this)
     }
 }

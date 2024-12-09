@@ -1,9 +1,7 @@
 package com.mobdeve.s12.group10.mco
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -14,7 +12,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mobdeve.s12.group10.mco.databinding.ActivityCalendarViewBinding
 import com.mobdeve.s12.group10.mco.databinding.DialogTaskCreateBinding
-import com.mobdeve.s12.group10.mco.databinding.DialogTaskDetailedBinding
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
@@ -23,6 +20,7 @@ class CalendarView : AppCompatActivity(), CalendarAdapter.OnItemListener, OnDate
 
     private lateinit var binding: ActivityCalendarViewBinding
     private lateinit var dialogBinding: DialogTaskCreateBinding
+    private lateinit var taskDatabase: TaskDatabase
 
     companion object {
         var selectedDate: Calendar = Calendar.getInstance()
@@ -34,14 +32,17 @@ class CalendarView : AppCompatActivity(), CalendarAdapter.OnItemListener, OnDate
         binding = ActivityCalendarViewBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Initialize TaskDatabase
+        taskDatabase = TaskDatabase(applicationContext)
+
         ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        binding.rcvTasks.adapter = TaskAdapter(this, this, DataGenerator.loadTasks())
-        binding.rcvTasks.layoutManager = LinearLayoutManager(this)
+        // Load all tasks from the database
+        loadTasks()
 
         binding.btnCreate.setOnClickListener {
             showCreateTaskDialog()
@@ -126,44 +127,43 @@ class CalendarView : AppCompatActivity(), CalendarAdapter.OnItemListener, OnDate
     override fun onItemClick(position: Int, dayText: String) {
         if (dayText.isNotEmpty()) {
             try {
-                // Construct the selected date in the format used in the task data: "yyyy-MM-dd"
+                // Construct the selected date string in "MMMM yyyy dd"
                 val selectedDate = "${monthYearFromDate(selectedDate)} $dayText"
                 val dateFormat = SimpleDateFormat("MMMM yyyy dd", Locale.getDefault())
                 val parsedDate = dateFormat.parse(selectedDate)
 
-                // Convert to "yyyy-MM-dd" format for task filtering
-                val dateString = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(parsedDate!!)
+                // Convert parsed date to "yyyy-MM-dd" for database filtering
+                val dbDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                val dateString = dbDateFormat.format(parsedDate!!)
 
-                // Filter tasks for the selected date
-                val filteredTasks = filterTasksByDate(DataGenerator.loadTasks(), dateString)
+                // Retrieve tasks for the selected date
+                val filteredTasks: List<Task> = taskDatabase.getTasksByDate(dateString)
 
                 if (filteredTasks.isEmpty()) {
-                    // Handle the case where no tasks exist for the selected date
                     Toast.makeText(this, "No tasks for $dateString", Toast.LENGTH_SHORT).show()
+                } else {
+                    // Update RecyclerView with filtered tasks
+                    binding.rcvTasks.adapter = TaskAdapter(this, filteredTasks as ArrayList<Task>)
+                    binding.rcvTasks.layoutManager = LinearLayoutManager(this)
                 }
 
-                // Update the RecyclerView with the filtered task list
-                binding.rcvTasks.adapter = TaskAdapter(this, this, filteredTasks)
-                binding.rcvTasks.layoutManager = LinearLayoutManager(this)
-
             } catch (e: Exception) {
-                // Catch any issues and show a meaningful error message
                 e.printStackTrace()
                 Toast.makeText(this, "Error parsing date: ${e.message}", Toast.LENGTH_LONG).show()
             }
         }
     }
 
+
     private fun showAllTasks() {
-        // Load all tasks and update the RecyclerView
-        val allTasks = DataGenerator.loadTasks()
-        binding.rcvTasks.adapter = TaskAdapter(this, this, allTasks)
+        // Load all tasks from the database
+        val allTasks = taskDatabase.getAllTasks()
+        binding.rcvTasks.adapter = TaskAdapter(this, allTasks)
         binding.rcvTasks.layoutManager = LinearLayoutManager(this)
 
         // Show a confirmation message
         Toast.makeText(this, "Showing all tasks", Toast.LENGTH_SHORT).show()
     }
-
 
     fun showCreateTaskDialog() {
         dialogBinding = DialogTaskCreateBinding.inflate(layoutInflater)
@@ -174,21 +174,41 @@ class CalendarView : AppCompatActivity(), CalendarAdapter.OnItemListener, OnDate
         dialog.dismiss()
 /*
         dialogBinding.lyvEditDate.setOnClickListener {
-            val newFragment = DatePickerFragment()
+            val newFragment = TaskDatePickerFragment()
             newFragment.show(supportFragmentManager, "datePicker")
         }
 
         dialogBinding.lyvEditTime.setOnClickListener {
-            val newFragment = TimePickerFragment()
+            val newFragment = TaskTimePickerFragment()
             newFragment.show(supportFragmentManager, "timePicker")
         }
 */
         dialogBinding.saveActivityButton.setOnClickListener {
-            //TODO: Create and save
+            // Get the task details from the dialog
+            val task = Task(
+                id = 0, // ID is generated by the database
+                name = dialogBinding.editActivityTitleInput.text.toString(),
+                date = dialogBinding.editActivityDateInput.text.toString(),
+                time = dialogBinding.editActivityTimeInput.text.toString(),
+                desc = dialogBinding.editActivityDescriptionInput.text.toString()
+            )
+
+            // Insert the task into the database
+            taskDatabase.addTask(task)
+
+            // Refresh the task list
+            loadTasks()
+
             dialog.dismiss()
         }
 
         dialog.show()
+    }
+
+    private fun loadTasks() {
+        val tasks = taskDatabase.getAllTasks()
+        binding.rcvTasks.adapter = TaskAdapter(this, tasks)
+        binding.rcvTasks.layoutManager = LinearLayoutManager(this)
     }
 
     override fun onDatePass(data: String) {
