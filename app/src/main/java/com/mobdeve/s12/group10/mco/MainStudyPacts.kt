@@ -71,6 +71,8 @@ class MainStudyPacts : AppCompatActivity() {
         }
 
         viewBinding.btnReturn.setOnClickListener {
+            val intent = Intent(this, MainActivity::class.java)
+            this.startActivity(intent)
             finish()
         }
 
