@@ -9,7 +9,6 @@ class SPViewHolder(var viewBinding: SpSmallLayoutBinding): RecyclerView.ViewHold
     fun bindData(sp: StudyPact){
         this.viewBinding.txvSPTitle.text = sp.name
         this.viewBinding.txvSPDate.text = formatDate(sp.dateTime)
-        this.viewBinding.txvSPPlace.text = sp.location
         this.viewBinding.txvStatus.text = sp.status
     }
 

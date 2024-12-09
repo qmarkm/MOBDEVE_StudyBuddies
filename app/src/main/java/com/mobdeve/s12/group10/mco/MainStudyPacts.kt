@@ -13,6 +13,24 @@ import com.mobdeve.s12.group10.mco.databinding.ActivityMainStudyPactsBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.preference.PreferenceManager
+
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+
+import org.osmdroid.config.Configuration.*
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.ItemizedIconOverlay
+import org.osmdroid.views.overlay.ItemizedOverlayWithFocus
+import org.osmdroid.views.overlay.Marker
+import org.osmdroid.views.overlay.OverlayItem
+
+import java.util.ArrayList
+import com.google.firebase.firestore.GeoPoint as GeoPointFS
 /**
  * Credits to:
  * → https://www.youtube.com/watch?app=desktop&v=ROkKPgXpd1Y
@@ -24,6 +42,12 @@ import java.util.Locale
 
 class MainStudyPacts : AppCompatActivity() {
     private lateinit var viewBinding: ActivityMainStudyPactsBinding
+    private val spList: SPList = SPList(this)
+    private lateinit var spArray: ArrayList<StudyPact>
+
+    //OSM Map Attributes
+    private val REQUEST_PERMISSIONS_REQUEST_CODE = 1
+    private lateinit var map : MapView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,33 +55,7 @@ class MainStudyPacts : AppCompatActivity() {
         viewBinding = ActivityMainStudyPactsBinding.inflate(layoutInflater)
         setContentView(viewBinding.root)
 
-        FirebaseApp.initializeApp(this)
-        val db = FirebaseFirestore.getInstance()
-
-        val inputFormat : SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault())
-
-        val spArray = ArrayList<StudyPact>()
-        db.collection("studyPacts").get().addOnSuccessListener { result ->
-            for (document in result) {
-                val timestamp : Timestamp = document.getTimestamp("dateTime") ?: Timestamp.now()
-                val spdatetime = inputFormat.format(timestamp.toDate())
-
-                val joiningUsers = ArrayList(document.get("joiningUsers") as? List<String>)
-                if (getLoggedInUserEmail().toString() in joiningUsers) {
-                    val sp = StudyPact(
-                        document.id,
-                        document.getString("name") ?: "Error",
-                        document.getString("creator") ?: "dummy@email.com",
-                        spdatetime.toString(),
-                        document.getString("location") ?: "De La Salle University",
-                        document.getString("description") ?: "Error: No values returned",
-                        ArrayList(document.get("joiningUsers") as? List<String>),
-                        document.getString("status") ?: "Cancelled"
-                    )
-                    spArray.add(sp)
-                }
-            }
-        }
+        spArray = spList.getLoggedInSP()
 
         viewBinding.rcvStudyPacts.adapter = SPAdapter(spArray, this)
         viewBinding.rcvStudyPacts.layoutManager = LinearLayoutManager(this)
@@ -75,10 +73,89 @@ class MainStudyPacts : AppCompatActivity() {
         viewBinding.btnReturn.setOnClickListener {
             finish()
         }
+
+        //Map API stuff
+        getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this))
+
+        map = viewBinding.osmmap
+        map.setTileSource(TileSourceFactory.MAPNIK)
+
+        val mapController = map.controller
+        mapController.setZoom(19)
+        val startPoint = GeoPoint(14.5648, 120.9932)        //lozol
+        mapController.setCenter(startPoint);
+
+        //Zoom for Map
+        map.setBuiltInZoomControls(true)
+        map.setMultiTouchControls(true)
+
+        Log.d("TAG", "MAPPE")
+
+        //your items
+        val items = ArrayList<SPOverlayItem>()
+        for (sp in spArray) {
+            items.add(SPOverlayItem(sp))
+            Log.d("TAG", sp.name)
+        }
+
+        for (item in items) {
+            val marker = Marker(map)
+            marker.position = item.point as GeoPoint?
+            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+
+            map.overlays.add(marker)
+            Log.d("TAG", item.studyPact.name)
+        }
+
+        //the overlay
+        var overlay = ItemizedOverlayWithFocus<OverlayItem>(items as List<OverlayItem>?, object: ItemizedIconOverlay.OnItemGestureListener<OverlayItem> {
+            override fun onItemSingleTapUp(index:Int, item:OverlayItem):Boolean {
+                val spItem = item as SPOverlayItem
+                val intent = Intent(this@MainStudyPacts, SPDetailed::class.java)
+
+                intent.putExtra("SP_ID", spItem.studyPact._id)
+                intent.putExtra("SP_TITLE", spItem.studyPact.name)
+                intent.putExtra("SP_DATETIME", spItem.studyPact.dateTime)
+                intent.putExtra("SP_LOCATION", "There")
+                intent.putExtra("SP_DESCRIPTION", spItem.studyPact.description)
+                intent.putExtra("SP_USERS", spItem.studyPact.joiningUsers)
+                intent.putExtra("SP_STATUS", spItem.studyPact.status)
+
+                this@MainStudyPacts.startActivity(intent)
+                return true
+            }
+            override fun onItemLongPress(index:Int, item:OverlayItem):Boolean {
+                return false
+            }
+        }, this)
+        overlay.setFocusItemsOnTap(true)
+
+        map.overlays.add(overlay)
     }
 
-    private fun getLoggedInUserEmail(): String? {
-        val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        return sharedPreferences.getString("loggedInUserEmail", null)
+    override fun onResume() {
+        super.onResume()
+        map.onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        map.onPause()
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        val permissionsToRequest = ArrayList<String>()
+        var i = 0
+        while (i < grantResults.size) {
+            permissionsToRequest.add(permissions[i])
+            i++
+        }
+        if (permissionsToRequest.size > 0) {
+            ActivityCompat.requestPermissions(
+                this,
+                permissionsToRequest.toTypedArray(),
+                REQUEST_PERMISSIONS_REQUEST_CODE)
+        }
     }
 }

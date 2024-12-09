@@ -118,20 +118,18 @@
 
     </LinearLayout>
 
-    <EditText
-        android:id="@+id/txvLocationField"
+    <RelativeLayout
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
-        android:layout_height="50sp"
+        android:layout_height="200dp"
         android:layout_marginStart="25dp"
-        android:layout_marginEnd="25dp"
-        android:background="@drawable/button_gradient3"
-        android:drawableStart="@drawable/location"
-        android:ems="10"
-        android:hint="Location"
-        android:inputType="text"
-        android:paddingLeft="10sp"
-        android:textColor="@color/babyGreen"
-        android:textColorHint="@color/babyGreen" />
+        android:layout_marginEnd="25dp">
+
+        <org.osmdroid.views.MapView
+            android:id="@+id/osmmap"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
 
     <EditText
         android:id="@+id/txvDescField"
