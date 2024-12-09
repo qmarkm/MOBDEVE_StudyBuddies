@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.firebase.FirebaseApp
 import com.google.firebase.Timestamp
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.GeoPoint as GeoPointFS
 import com.mobdeve.s12.group10.mco.databinding.ActivitySpviewBinding
 import java.text.SimpleDateFormat
 import java.util.Locale
@@ -96,7 +97,7 @@ class SPView : AppCompatActivity() {
                     document.getString("name") ?: "Error",
                     document.getString("creator") ?: "dummy@email.com",
                     spdatetime.toString(),
-                    document.getString("location") ?: "De La Salle University",
+                    (document.get("location") ?: GeoPointFS(4.5648, 120.9932)) as GeoPointFS,
                     document.getString("description") ?: "Error: No values returned",
                     ArrayList(document.get("joiningUsers") as? List<String>),
                     document.getString("status") ?: "Cancelled"

@@ -3,6 +3,7 @@ package com.mobdeve.s12.group10.mco
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.ComponentActivity
 import androidx.appcompat.app.AppCompatActivity
@@ -16,6 +17,9 @@ import java.util.Locale
 
 class MainActivity : AppCompatActivity() {
     private lateinit var viewBinding: ActivityMainBinding
+    private val spList: SPList = SPList(this)
+    private lateinit var spAdapter: SPAdapter
+    private var spVisible: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,54 +42,34 @@ class MainActivity : AppCompatActivity() {
             this.startActivity(intent)
         }
 
-        FirebaseApp.initializeApp(this)
-        val db = FirebaseFirestore.getInstance()
-
-        val inputFormat : SimpleDateFormat = SimpleDateFormat("yyyy-MM-dd hh:mm a", Locale.getDefault())
-
-        val spArray = ArrayList<StudyPact>()
-        db.collection("studyPacts").get().addOnSuccessListener { result ->
-            for (document in result) {
-                val timestamp : Timestamp = document.getTimestamp("dateTime") ?: Timestamp.now()
-                val spdatetime = inputFormat.format(timestamp.toDate())
-
-                val joiningUsers = ArrayList(document.get("joiningUsers") as? List<String>)
-                if (getLoggedInUserEmail().toString() in joiningUsers) {
-                    val sp = StudyPact(
-                        document.id,
-                        document.getString("name") ?: "Error",
-                        document.getString("creator") ?: "dummy@email.com",
-                        spdatetime.toString(),
-                        document.getString("location") ?: "De La Salle University",
-                        document.getString("description") ?: "Error: No values returned",
-                        ArrayList(document.get("joiningUsers") as? List<String>),
-                        document.getString("status") ?: "Cancelled"
-                    )
-                    spArray.add(sp)
-                }
-            }
-        }
-
-        viewBinding.rcvSP.adapter = SPAdapter(spArray, this)
-        viewBinding.rcvSP.layoutManager = LinearLayoutManager(this)
         viewBinding.rcvSP.visibility = View.GONE
-
-        viewBinding.rcvCalendar.adapter = TaskAdapter(this, this, DataGenerator.loadTasks())
-        viewBinding.rcvCalendar.layoutManager = LinearLayoutManager(this)
 
         viewBinding.btnToggleSP.setOnClickListener {
             viewBinding.rcvSP.visibility = View.VISIBLE
             viewBinding.rcvCalendar.visibility = View.GONE
+            spVisible = true
         }
 
         viewBinding.btnToggleTask.setOnClickListener {
             viewBinding.rcvCalendar.visibility = View.VISIBLE
             viewBinding.rcvSP.visibility = View.GONE
+            spVisible = false
         }
     }
 
-    private fun getLoggedInUserEmail(): String? {
-        val sharedPreferences = getSharedPreferences("UserPrefs", Context.MODE_PRIVATE)
-        return sharedPreferences.getString("loggedInUserEmail", null)
+    override fun onResume() {
+        super.onResume()
+
+        //TODO: When coming back, recycler view is invisible -> need to reset via toggle buttons
+        var spArray = spList.getLoggedInSP()
+
+        viewBinding.rcvSP.adapter = SPAdapter(spArray, this)
+        viewBinding.rcvSP.layoutManager = LinearLayoutManager(this)
+
+        viewBinding.rcvCalendar.adapter = TaskAdapter(this, this, DataGenerator.loadTasks())
+        viewBinding.rcvCalendar.layoutManager = LinearLayoutManager(this)
+
+        Log.d("TAG", "YEAH ON RESUmE")
+        viewBinding.rcvSP.visibility = View.VISIBLE
     }
 }

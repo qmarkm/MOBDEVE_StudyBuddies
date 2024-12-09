@@ -1,17 +1,17 @@
 package com.mobdeve.s12.group10.mco
 
+import com.google.firebase.firestore.GeoPoint as GeoPointFS
 import org.json.JSONObject
+import java.io.Serializable
 import java.util.Calendar
 
-//TODO: Finish class, temporarily made for RecyclerView parameters
-
-data class StudyPact (
+data class StudyPact(
     val _id: String,
-    val name: String,
+    var name: String,
     val creator: String,
-    val dateTime: String,
-    val location: String,
-    val description: String,
-    val joiningUsers: ArrayList<String>,
+    var dateTime: String,
+    var location: GeoPointFS,
+    var description: String,
+    var joiningUsers: ArrayList<String>,
     val status: String
 )

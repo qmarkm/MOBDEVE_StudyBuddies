@@ -26,7 +26,6 @@ class SPAdapter(private var studyPacts: ArrayList<StudyPact>, private val contex
         return studyPacts.size
     }
 
-    @SuppressLint("ResourceAsColor")
     override fun onBindViewHolder(holder: SPViewHolder, position: Int) {
         holder.bindData(studyPacts.get(position))
 
@@ -44,9 +43,10 @@ class SPAdapter(private var studyPacts: ArrayList<StudyPact>, private val contex
             intent.putExtra("SP_ID", studyPacts.get(position)._id)
             intent.putExtra("SP_TITLE", studyPacts.get(position).name)
             intent.putExtra("SP_DATETIME", studyPacts.get(position).dateTime)
-            intent.putExtra("SP_LOCATION", studyPacts.get(position).location)
+            intent.putExtra("SP_LATITUDE", studyPacts.get(position).location.latitude)
+            intent.putExtra("SP_LONGITUDE", studyPacts.get(position).location.longitude)
             intent.putExtra("SP_DESCRIPTION", studyPacts.get(position).description)
-            intent.putExtra("SP_USERS", studyPacts.get(position).joiningUsers)              //ArrayList?
+            intent.putExtra("SP_USERS", studyPacts.get(position).joiningUsers)
             intent.putExtra("SP_STATUS", studyPacts.get(position).status)
 
             holder.itemView.context.startActivity(intent)

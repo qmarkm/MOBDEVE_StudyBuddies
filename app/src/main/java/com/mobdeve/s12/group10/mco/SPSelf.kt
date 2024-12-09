@@ -5,6 +5,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.preference.PreferenceManager
 import android.text.Editable
 import android.util.Log
 import android.widget.Button
@@ -24,6 +25,14 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 import android.text.TextWatcher
+import org.osmdroid.config.Configuration.getInstance
+import org.osmdroid.events.MapEventsReceiver
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory
+import org.osmdroid.util.GeoPoint
+import org.osmdroid.views.MapView
+import org.osmdroid.views.overlay.MapEventsOverlay
+import org.osmdroid.views.overlay.Marker
+import com.google.firebase.firestore.GeoPoint as GeoPointFS
 
 class SPSelf : AppCompatActivity(), OnDatePass, OnTimePass {
     private lateinit var viewBinding: ActivitySpselfBinding
@@ -31,6 +40,10 @@ class SPSelf : AppCompatActivity(), OnDatePass, OnTimePass {
     private var createDialog: Dialog? = null
     private lateinit var spArray: ArrayList<StudyPact>
     private lateinit var studyPactAdapter: SPAdapter
+
+    //Map Stuff
+    private val REQUEST_PERMISSIONS_REQUEST_CODE = 1
+    private lateinit var map : MapView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,7 +126,7 @@ class SPSelf : AppCompatActivity(), OnDatePass, OnTimePass {
                     document.getString("name") ?: "Error",
                     document.getString("creator") ?: "dummy@email.com",
                     spdatetime.toString(),
-                    document.getString("location") ?: "De La Salle University",
+                    (document.get("location") ?: GeoPointFS(4.5648, 120.9932)) as GeoPointFS,
                     document.getString("description") ?: "Error: No values returned",
                     ArrayList(document.get("joiningUsers") as? List<String>),
                     document.getString("status") ?: "Cancelled"
@@ -137,8 +150,49 @@ class SPSelf : AppCompatActivity(), OnDatePass, OnTimePass {
             createDialog!!.dismiss()
         }
 
+        //Map API stuff
+        getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this))
+
+        map = dialogViewBinding.osmmap
+        map.setTileSource(TileSourceFactory.MAPNIK)
+
+        val mapController = map.controller
+        mapController.setZoom(19)
+        val startPoint = GeoPoint(14.5648, 120.9932)        //DLSU
+        mapController.setCenter(startPoint);
+
+        //Zoom for Map
+        map.setBuiltInZoomControls(true)
+        map.setMultiTouchControls(true)
+
+        var geolocation : GeoPoint? = null
+        var previousMarker : Marker? = null
+        val tapOverlay = MapEventsOverlay(object: MapEventsReceiver {
+            override fun singleTapConfirmedHelper(p: GeoPoint?): Boolean {
+                if (p != null) {
+                    geolocation = p
+
+                    val marker = Marker(map)
+                    marker.position = p
+                    marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM)
+
+                    if (previousMarker != null)
+                        map.overlays.remove(previousMarker)
+                    previousMarker = marker
+
+                    map.overlays.add(marker)
+                    map.invalidate()
+                }
+                return true
+            }
+            override fun longPressHelper(p: GeoPoint?): Boolean {
+                return true
+            }
+        })
+        map.overlays.add(tapOverlay)
+
         dialogViewBinding.btnCreate.setOnClickListener {
-            if (checkInputFields()) {
+            if (checkInputFields(geolocation)) {
                 val inputFormat = SimpleDateFormat("MMMM dd, yyyy hh:mm a", Locale.getDefault())
 
                 FirebaseApp.initializeApp(this)
@@ -148,7 +202,7 @@ class SPSelf : AppCompatActivity(), OnDatePass, OnTimePass {
                 val spcreator: String = getLoggedInUserEmail().toString()
                 val spdate = dialogViewBinding.txvDateField.text.toString()
                 val sptime = dialogViewBinding.txvTimeField.text.toString()
-                val splocation = dialogViewBinding.txvLocationField.text.toString()
+                val splocation = GeoPointFS(geolocation!!.latitude, geolocation!!.longitude)
                 val spdescription = dialogViewBinding.txvDescField.text.toString()
 
                 val dateTime = "$spdate $sptime"
@@ -176,10 +230,7 @@ class SPSelf : AppCompatActivity(), OnDatePass, OnTimePass {
                 fetchSP()
             } else {
                 Toast.makeText(this, "Please input every field", Toast.LENGTH_SHORT).show()
-                // TODO: Make borders red
             }
-
-            createDialog!!.dismiss()
         }
         dialogViewBinding.txvTitle.text = "Create Study Pact"
 
@@ -209,7 +260,7 @@ class SPSelf : AppCompatActivity(), OnDatePass, OnTimePass {
         createDialog!!.findViewById<TextView>(R.id.txvTimeField)?.text = data
     }
 
-    fun checkInputFields(): Boolean {
+    fun checkInputFields(geolocation : GeoPoint?): Boolean {
         if (createDialog!!.findViewById<TextView>(R.id.txvTitleField).text.isNullOrBlank())
             return false
 
@@ -219,7 +270,7 @@ class SPSelf : AppCompatActivity(), OnDatePass, OnTimePass {
         if (createDialog!!.findViewById<TextView>(R.id.txvTimeField).text.isNullOrBlank())
             return false
 
-        if (createDialog!!.findViewById<TextView>(R.id.txvLocationField).text.isNullOrBlank())
+        if (geolocation == null)
             return false
 
         if (createDialog!!.findViewById<TextView>(R.id.txvDescField).text.isNullOrBlank())

@@ -78,7 +78,7 @@ dependencies {
     implementation ("com.google.firebase:firebase-firestore:25.1.1")
     implementation(platform("com.google.firebase:firebase-bom:33.6.0"))
     implementation("com.google.firebase:firebase-analytics")
-    /// new things
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation("com.google.firebase:firebase-database-ktx")
+    implementation("org.osmdroid:osmdroid-android:6.1.14")
 }
